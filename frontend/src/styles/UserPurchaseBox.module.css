@@ -1,0 +1,73 @@
+/* src/components/Rectangle.module.css */
+.rectangle {
+    position: fixed;
+    width: 80%;
+    height: 60%;
+    max-width: 750px;
+    max-height: 600px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Adjust the position for the element's dimensions */
+    background: #006837;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.box0 {
+    position: fixed;
+    width: 90%;
+    height: 20%;
+    left: 50%;
+    top: 35%;
+    transform: translate(-50%, -50%); /* Adjust the position for the element's dimensions */
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+} 
+
+.box1 {
+    position: fixed;
+    width: 90%;
+    height: 20%;
+    left: 50%;
+    top: 58%;
+    transform: translate(-50%, -50%); /* Adjust the position for the element's dimensions */
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.buy {
+    position: fixed;
+    width: 90%;
+    height: 13%;
+    left: 50%;
+    top: 77%;
+    transform: translate(-50%, -50%); /* Adjust the position for the element's dimensions */
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.inputWrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+.CurSelector0 {
+    width: 17.5%;
+    right: 10%;
+    top: 35%;
+    position: absolute;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.CurSelector1 {
+    width: 17.5%;
+    right: 10%;
+    top: 58%;
+    position: absolute;
+    transform: translateY(-50%);
+    pointer-events: none;
+}

@@ -1,0 +1,30 @@
+/* Header.module.css */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+  }
+
+  
+.searchBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-image: url('/SearchCompany.svg');
+  /* Add more styles for the search box container */
+}
+  
+.connectWallet button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.connectWallet img {
+  display: block;
+  width: 200px;
+  height: auto;
+}
+  

@@ -1,0 +1,131 @@
+/* src/components/Rectangle.module.css */
+.rectangle {
+    position: fixed;
+    width: 80%;
+    height: 60%;
+    max-width: 750px;
+    max-height: 600px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Adjust the position for the element's dimensions */
+    background: #006837;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.blackBox {
+    position: absolute;
+    width: 25%; /* Adjust the width as needed */
+    height: 100%;
+    background-color: black;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+  
+.contentArea {
+    position: absolute;
+    width: 80%; /* Adjust the width as needed */
+    height: 100%;
+    left: 30%;
+}
+
+.button {
+    position: relative; 
+    width: 100%;
+    top: 10%;
+    background: black;
+    border: none;
+    cursor: pointer;
+    color: #D9D9D9;
+}
+
+.amountBox {
+    position: absolute;
+    width: 80%;
+    height: 20%;   
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+} 
+
+.amountBoxO {
+    position: relative;
+    width: 80%;
+    height: 20%;   
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+} 
+
+.priceBox {
+    position: relative;
+    width: 80%;
+    height: 20%;   
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.burn {
+    position: absolute;
+    width: 40%;
+    height: 13%;
+    top: 50%;
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.mint {
+    position: absolute;
+    width: 40%;
+    height: 13%;
+    top: 50%;
+    left: 42%;
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.pause{
+    position: absolute;
+    width: 40%;
+    height: 13%;
+    top: 25%;
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.unpause{
+    position: absolute;
+    width: 40%;
+    height: 13%;
+    top: 25%;
+    left: 42%;
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.staOffering {
+    position: absolute;
+    width: 40%;
+    height: 13%;
+    top: 60%;
+    left: 0%;
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.stoOffering {
+    position: absolute;
+    width: 40%;
+    height: 13%;
+    top: 60%;
+    left: 42%;
+    background: #D9D9D9;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
