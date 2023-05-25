@@ -9,6 +9,7 @@ export default function Document() {
         <link href="https://fonts.googleapis.com/css2?family=Inter&family=Roboto&family=Roboto+Mono&display=swap"
             rel="stylesheet"
         />
+        <link rel="icon" href="/SCLLogo.svg" />
       </Head>
       <body>
         <Main />

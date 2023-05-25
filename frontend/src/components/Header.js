@@ -1,6 +1,6 @@
 // Header.js
 import React from 'react';
-import styles from '@/styles/Header.module.css';
+import styles from '../styles/header.module.css';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -49,6 +49,9 @@ const Header = () => {
                 sx={{
                     width: '350px',
                     height: '40px',
+                    '@media only screen and (max-width: 767px)': {
+                        display: 'none',
+                      },
                     // set background color
                     backgroundColor: 'rgba(0, 104, 55, 1)',
                     // Set the text color

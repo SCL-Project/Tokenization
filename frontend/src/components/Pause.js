@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import styles from '@/styles/CompanyBox.module.css';
+import styles from '../styles/CompanyBox.module.css';
+import Button from '@mui/material/Button';
+
 
 const Offering = ({ web3, account, contract }) => {
     const handlePause = async () => {
@@ -19,14 +21,31 @@ const Offering = ({ web3, account, contract }) => {
     };
 
     return (
-        <div>
+        <div className={styles.container}>
             <h1>Pause/Unpause</h1>
-            <button className={styles.pause} onClick={handlePause}>
-                Pause
-            </button>
-            <button className={styles.unpause} onClick={handleUnpause}>
-                Unpause
-            </button>
+            <div className={styles.flexButton}>
+                    <Button 
+                        variant="contained"
+                        onClick={handlePause}
+                        className={styles.button}
+                        sx={{ 
+                            width: { xs: '100%', sm: 'calc(50% - 8px)' }, 
+                            mt: 1,
+                            mr: { xs: 0, sm: 1 },                           
+                        }}>
+                            Pause
+                    </Button>
+                    <Button 
+                        variant="contained"
+                        onClick={handleUnpause}
+                        className={styles.button}
+                        sx={{ 
+                            width: { xs: '100%', sm: '50%' }, 
+                            mt: 1,                           
+                        }}>
+                            Unpause
+                    </Button>
+                </div>
         </div>
     );
 };

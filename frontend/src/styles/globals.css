@@ -1,5 +1,5 @@
 body {
-  background-color: #05503C;
+  background-color: #05503C !important;
   background-image: url('/BackgroundSpiral.svg');
   background-repeat: no-repeat;
   background-position: center;
@@ -15,8 +15,15 @@ h1 {
   font-style: normal;
   font-weight: bold;
   font-size: 40px;
-  line-height: 58px;
   color: #FFFFFF;
+}
+
+p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-decoration: none !important;
 }
 
 button {
@@ -25,5 +32,12 @@ button {
   font-weight: bold;
   font-size: 18px;
   line-height: 40px;
+  text-decoration: none !important;
+}
+  
+@media only screen and (max-width: 767px) {
+  h1 {
+    font-size: 28px;
+  }
 }
 

@@ -27,4 +27,40 @@
   width: 200px;
   height: auto;
 }
+
+.logo {
+  margin-right: 1rem;
+  height: auto;
+  max-height: 32px; /* This is for mobile devices */
+  width: auto;
+  display: none; /* This will hide the logo on smaller screens */
+}
+
+/* For screens larger than or equal to the 'md' breakpoint (960px by default in Material-UI v5) */
+@media screen and (min-width: 960px) {
+  .logo {
+    max-height: 48px; /* Adjust the maximum height based on the screen size */
+    display: inline-flex; /* This will show the logo on larger screens */
+  }
+}
+
+@media screen and (max-width: 959px) {
+  .logo {
+    display: inline-flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+
+@media only screen and (max-width: 767px) {
+  .searchBar {
+    display: none;
+  }
+
+  .connectWallet {
+    display: none;
+  }
+}
   
