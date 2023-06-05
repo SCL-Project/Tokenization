@@ -4,13 +4,13 @@ pragma solidity ^0.8.7;
 
 contract Pausable {
 
-    bool private _paused;
+    bool private paused;
 
     event Paused(uint256 time);
     event Unpaused(uint256 time);
 
     constructor() {
-        _paused = false;
+        paused = false;
     }
 
     modifier whenNotPaused() {
@@ -24,16 +24,16 @@ contract Pausable {
     }
 
     function isPaused() public view returns (bool) {
-        return _paused;
+        return paused;
     }
 
-    function pause() private virtual {
-        _paused = true;
+    function pause() private whenNotPaused {
+        paused = true;
         emit Paused(block.timestamp);
     }
 
-    function unpause() private virtual {
-        _paused = false;
+    function unpause() private whenPaused {
+        paused = false;
         emit Unpaused(block.timestamp);
     }
 }
