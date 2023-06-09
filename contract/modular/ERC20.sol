@@ -21,56 +21,56 @@ contract ERC20 is IERC20, Ownable, Pausable {
         _decimals = decimals_;
     }
 
-    function name() public view virtual override returns (string memory) {
+    function name() public view override returns (string memory) {
         return _name;
     }
 
-    function symbol() public view virtual override returns (string memory) {
+    function symbol() public view override returns (string memory) {
         return _symbol;
     }
 
-    function decimals() public view virtual override returns (uint8) {
+    function decimals() public view override returns (uint8) {
         return _decimals;
     }
 
-    function totalSupply() public view virtual override returns (uint256) {
+    function totalSupply() public view override returns (uint256) {
         return _totalSupply;
     }
 
-    function balanceOf(address account) public view virtual override returns (uint256) {
+    function balanceOf(address account) public view override returns (uint256) {
         return _balances[account];
     }
 
-    function transfer(address to, uint256 amount) public virtual whenNotPaused override returns (bool) {
+    function transfer(address to, uint256 amount) public whenNotPaused override returns (bool) {
         address owner = msg.sender;
         _transfer(owner, to, amount);
         return true;
     }
 
-    function allowance(address owner, address spender) public view virtual override returns (uint256) {
+    function allowance(address owner, address spender) public view override returns (uint256) {
         return _allowances[owner][spender];
     }
 
-    function approve(address spender, uint256 amount) public virtual override returns (bool) {
+    function approve(address spender, uint256 amount) public override returns (bool) {
         address owner = msg.sender;
         _approve(owner, spender, amount);
         return true;
     }
 
-    function transferFrom(address from, address to, uint256 amount) public virtual whenNotPaused override returns (bool) {
+    function transferFrom(address from, address to, uint256 amount) public whenNotPaused override returns (bool) {
         address spender = msg.sender;
         _spendAllowance(from, spender, amount);
         _transfer(from, to, amount);
         return true;
     }
 
-    function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
+    function increaseAllowance(address spender, uint256 addedValue) public returns (bool) {
         address owner = msg.sender;
         _approve(owner, spender, allowance(owner, spender) + addedValue);
         return true;
     }
 
-    function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+    function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool) {
         address owner = msg.sender;
         uint256 currentAllowance = allowance(owner, spender);
         require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
@@ -134,7 +134,7 @@ contract ERC20 is IERC20, Ownable, Pausable {
         _update(account, address(0), amount);
     }
 
-    function _approve(address owner, address spender, uint256 amount) internal virtual {
+    function _approve(address owner, address spender, uint256 amount) internal {
         require(owner != address(0), "ERC20: approve from the zero address");
         require(spender != address(0), "ERC20: approve to the zero address");
 
@@ -142,7 +142,7 @@ contract ERC20 is IERC20, Ownable, Pausable {
         emit Approval(owner, spender, amount);
     }
 
-    function _spendAllowance(address owner, address spender, uint256 amount) internal virtual {
+    function _spendAllowance(address owner, address spender, uint256 amount) internal {
         uint256 currentAllowance = allowance(owner, spender);
         if (currentAllowance != type(uint256).max) {
             require(currentAllowance >= amount, "ERC20: insufficient allowance");
@@ -150,5 +150,13 @@ contract ERC20 is IERC20, Ownable, Pausable {
                 _approve(owner, spender, currentAllowance - amount);
             }
         }
+    }
+
+    function pause() public whenNotPaused onlyOwners override {
+        super.pause();
+    }
+
+    function unpause() public whenPaused onlyOwners override {
+        super.unpause();
     }
 }

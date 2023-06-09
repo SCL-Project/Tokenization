@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 import "./Registration.sol";
 
 
-contract Recovery is Registration {
+abstract contract Recovery is Registration {
 
 
     uint256 public recoveryPrice;

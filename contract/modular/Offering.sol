@@ -1,18 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "./Dividends.sol";
+import "./Registration.sol";
 
-contract Offering is Dividends {
+abstract contract Offering is Registration {
 
     uint256 public offeringPrice;
     uint256 public offeringAmount;
     bool public offering;
-
-    modifier whenOffering {
-        require(offering, "Offering: No Tokens are being offered at the moment");
-        _;
-    }
 
     function startOffering(uint _price, uint _amount) public onlyOwners returns (bool) {
         offeringPrice = _price;
@@ -31,12 +26,13 @@ contract Offering is Dividends {
         return true;
     }
 
-    function stopOffering() public onlyOwners returns (bool) {
+    function stopOffering() public returns (bool) {
         offeringPrice = 0; offering = false;
         return true;
     }
 
-    function buyTokens() public payable whenOffering returns (uint256) {
+    function buyTokens() public payable returns (uint) {
+        require(offering, "Offering: No Tokens are being offered at the moment");
         uint256 _buyAmount = msg.value / offeringPrice;
 
         if (_buyAmount >= offeringAmount) {

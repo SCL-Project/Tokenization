@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./Recovery.sol";
+import "./Offering.sol";
+import "./Registration.sol";
 
+abstract contract Dividends is Registration {
 
-contract Dividends is Recovery {
-
-    address[] public investorsList;
+    address[] private investorsList;
     mapping(address => bool) private eligibleInvestors;
 
     function payDividends() public payable onlyOwners returns (bool) {
         uint256 _amountPerToken = msg.value / totalSupply();
         for (uint32 i = 0; i < investorsList.length; i++) {
-            uint256 _dividend = shareBalanceOf(investorsList[i]) * _amountPerToken;
-            payable(investorsList[i]).transfer(_dividend);
+            if (registry[investorsList[i]].registrationHash != 0) {
+                uint256 _dividend = shareBalanceOf(investorsList[i]) * _amountPerToken;
+                payable(investorsList[i]).transfer(_dividend);
+            }
         }
         return true;
     }

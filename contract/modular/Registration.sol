@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./Shares.sol";
+import "./Registry.sol";
 
 
-contract Registration is Shares {
+abstract contract Registration is Registry {
 
     event Registered(address indexed account, bytes32 registrationHash);
 

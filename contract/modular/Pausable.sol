@@ -27,12 +27,12 @@ contract Pausable {
         return paused;
     }
 
-    function pause() private whenNotPaused {
+    function pause() public virtual {
         paused = true;
         emit Paused(block.timestamp);
     }
 
-    function unpause() private whenPaused {
+    function unpause() public virtual {
         paused = false;
         emit Unpaused(block.timestamp);
     }

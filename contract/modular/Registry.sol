@@ -3,7 +3,7 @@ pragma solidity ^0.8.7;
 
 import "./ERC20.sol";
 
-contract Shares is ERC20 {
+abstract contract Registry is ERC20 {
 
     struct InvestorData {
         uint256 shareBalance;
@@ -13,14 +13,15 @@ contract Shares is ERC20 {
     }
 
     mapping(address => InvestorData) public registry;
+    int256 public fractionedShares;
     uint256 private ONE_TOKEN;
     address private registrar;
 
-    constructor() ERC20("Smart Contract Lab Token", "SCL", 18) {
+    constructor() {
         ONE_TOKEN = 10 ** decimals();
-        registrar = msg.sender;
-        mint(msg.sender, 100000 * ONE_TOKEN);
-        mint(0x5a88f1E531916b681b399C33F519b7E2E54b5213, 100000 * ONE_TOKEN);
+        registrar = address(0);
+        // mint(msg.sender, 100000 * ONE_TOKEN);
+        // mint(0x5a88f1E531916b681b399C33F519b7E2E54b5213, 100000 * ONE_TOKEN);
     }
 
     function shareBalanceOf(address account) public view virtual returns (uint256) {
@@ -43,17 +44,9 @@ contract Shares is ERC20 {
     function _update(address from, address to, uint256 amount) internal virtual override {
         super._update(from, to, amount);
 
-        uint256 fractions = amount % ONE_TOKEN;
-        uint256 fractionsFrom = registry[from].fractionalPartOfTokenBalance;
-        uint256 fractionsTo = 1 - registry[to].fractionalPartOfTokenBalance;
-
-        if (fractions > fractionsFrom) {
-            registry[registrar].shareBalance += 1;
-        }
-
-        if (fractions > fractionsTo) {
-            registry[registrar].shareBalance -= 1;
-        }
+        //uint256 fractions = amount % ONE_TOKEN;
+        //uint256 fractionsFrom = registry[from].fractionalPartOfTokenBalance;
+        //uint256 fractionsTo = registry[to].fractionalPartOfTokenBalance;
 
         if (from != address(0)) {
             calculateShares(from);
