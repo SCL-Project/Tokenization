@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "./Registration.sol";
+import "./Registry.sol";
 
-abstract contract Offering is Registration {
+abstract contract Offering is Registry {
 
     uint256 public offeringPrice;
     uint256 public offeringAmount;
@@ -11,8 +11,8 @@ abstract contract Offering is Registration {
 
     function startOffering(uint _price, uint _amount) public onlyOwners returns (bool) {
         offeringPrice = _price;
-        offering = true;
         offeringAmount = _amount;
+        offering = true;
         return true;
     }
 
@@ -27,7 +27,8 @@ abstract contract Offering is Registration {
     }
 
     function stopOffering() public returns (bool) {
-        offeringPrice = 0; offering = false;
+        offeringPrice = 0;
+        offering = false;
         return true;
     }
 

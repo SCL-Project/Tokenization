@@ -13,26 +13,30 @@ abstract contract Registry is ERC20 {
     }
 
     mapping(address => InvestorData) public registry;
-    int256 public fractionedShares;
+    uint256 private fractionedShares;
     uint256 private ONE_TOKEN;
-    address private registrar;
 
     constructor() {
         ONE_TOKEN = 10 ** decimals();
-        registrar = address(0);
-        // mint(msg.sender, 100000 * ONE_TOKEN);
-        // mint(0x5a88f1E531916b681b399C33F519b7E2E54b5213, 100000 * ONE_TOKEN);
     }
 
-    function shareBalanceOf(address account) public view virtual returns (uint256) {
+    function shareBalanceOf(address account) public view returns (uint256) {
         return registry[account].shareBalance;
     }
 
-    function fractionalPartOfTokenBalanceOf(address account) public view virtual returns (uint256) {
+    function fractionalPartOfTokenBalanceOf(address account) public view returns (uint256) {
         return registry[account].fractionalPartOfTokenBalance;
     }
 
-    function calculateShares(address account) internal virtual {
+    function totalFractionedSupply() public view returns (uint256) {
+        return fractionedShares;
+    }
+
+    function totalFullSupply() public view returns (uint256) {
+        return totalSupply() - fractionedShares;
+    }
+
+    function calculateShares(address account) internal {
         uint256 tokens = balanceOf(account);
         uint256 shares = tokens / ONE_TOKEN;
         uint256 fractions = tokens % ONE_TOKEN;
@@ -44,10 +48,9 @@ abstract contract Registry is ERC20 {
     function _update(address from, address to, uint256 amount) internal virtual override {
         super._update(from, to, amount);
 
-        //uint256 fractions = amount % ONE_TOKEN;
-        //uint256 fractionsFrom = registry[from].fractionalPartOfTokenBalance;
-        //uint256 fractionsTo = registry[to].fractionalPartOfTokenBalance;
-
+        uint256 fractionsFromBefore = registry[from].fractionalPartOfTokenBalance;
+        uint256 fractionsToBefore = registry[to].fractionalPartOfTokenBalance;
+        
         if (from != address(0)) {
             calculateShares(from);
         }
@@ -55,5 +58,10 @@ abstract contract Registry is ERC20 {
         if (to != address(0)) {
             calculateShares(to);
         }
-    }     
+
+        uint256 fractionsFromAfter = registry[from].fractionalPartOfTokenBalance;
+        uint256 fractionsToAfter = registry[to].fractionalPartOfTokenBalance;
+
+        fractionedShares += (fractionsFromAfter - fractionsFromBefore) + (fractionsToAfter - fractionsToBefore);
+    }
 }

@@ -4,26 +4,38 @@ pragma solidity ^0.8.7;
 
 contract Ownable {
 
-    mapping(address => bool) private owners;
+    mapping(address => bool) private ownersMap;
+    address[] private ownersList;
 
     modifier onlyOwners {
-        require(owners[msg.sender], "Ownable: You are not an owner");
+        require(ownersMap[msg.sender], "Ownable: You are not an owner");
         _;
     }
 
     constructor() {
-        owners[msg.sender] = true; // Lazaro
-        owners[0x5a88f1E531916b681b399C33F519b7E2E54b5213] = true; // Liam
-        owners[0x3082f89471245a689bdd60EC82e6c12da97531d7] = true; // Roman
-        owners[0xb3A5E267F04acF7804E22A8600081f8B854e7847] = true; // Laura
-        owners[0xF85F88412589949dBfD6a70c76417AdBcf358249] = true; // Patricia
+        ownersMap[msg.sender] = true;
+        ownersList.push(msg.sender);
     }
 
     function addOwner(address _newOwner) public onlyOwners returns (bool) {
-        owners[_newOwner] = true; return true;
+        ownersMap[_newOwner] = true;
+        ownersList.push(_newOwner);
+        return true;
     }
 
     function removeOwner(address _oldOwner) public onlyOwners returns (bool) {
-        owners[_oldOwner] = false; return true;
+        ownersMap[_oldOwner] = false;
+        for (uint i = 0; i < ownersList.length; i++) {
+            if (ownersList[i] == _oldOwner) {
+                ownersList[i] = ownersList[ownersList.length - 1];
+                ownersList.pop();
+                break;
+            }
+        }
+        return true;
+    }
+
+    function owners() public view returns (address[] memory) {
+        return ownersList;
     }
 }

@@ -6,7 +6,6 @@ import "./Registration.sol";
 
 abstract contract Recovery is Registration {
 
-
     uint256 public recoveryPrice;
     event AskedForRecovery(address indexed account);
     event Recovered(address indexed account);
