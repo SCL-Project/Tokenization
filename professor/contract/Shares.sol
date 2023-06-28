@@ -8,10 +8,11 @@
 // Author: Tokenization Team, Smart Contracts Lab, University of Zurich
 // Created: June 28, 2023
 // *******************************************
+import "./IERC20.sol";
 
 pragma solidity ^0.8.0;
 
-contract SwissEquityToken {
+contract SwissEquityToken is IERC20 {
 
     struct Investor {
         uint256 balance;
@@ -37,8 +38,6 @@ contract SwissEquityToken {
     uint public treasuryShares; // owned by issuer but inaccessible
     bool public paused;
 
-    event Transfer(address indexed from, address indexed to, uint amount);
-    event Approval(address indexed owner, address indexed spender, uint amount);
     event Registered(address indexed account, bytes32 hash, bool recoverable);
     event Recovered(address indexed oldAccount, address indexed newAccount);
 
@@ -66,21 +65,21 @@ contract SwissEquityToken {
 
 // ************************* Shareholder Module *************************
 
-    function name() public view returns (string memory) {return _name;}
+    function name() public view override returns (string memory) {return _name;}
 
-    function symbol() public view returns (string memory) {return _symbol;}
+    function symbol() public view override returns (string memory) {return _symbol;}
 
-    function decimals() public view returns (uint8) {return _decimals;}
+    function decimals() public view override returns (uint8) {return _decimals;}
 
-    function totalSupply() public view returns (uint256) {return _totalSupply;}
+    function totalSupply() public view override returns (uint256) {return _totalSupply;}
 
-    function balanceOf(address _owner) public view returns (uint256 balance) {return registry[_owner].balance;}
+    function balanceOf(address _owner) public view override returns (uint256 balance) {return registry[_owner].balance;}
 
     function sharesOf(address _account) public view returns (uint) {return registry[_account].shares;}
 
     function fractionsOf(address _account) public view returns (uint) {return registry[_account].fractions;}
 
-    function transfer(address _to, uint256 _value) public returns (bool success) {
+    function transfer(address _to, uint256 _value) public override returns (bool success) {
         settleTransfer(msg.sender, _to, _value);
         return true;
     }
@@ -90,7 +89,7 @@ contract SwissEquityToken {
         return true;
     }
 
-    function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+    function transferFrom(address _from, address _to, uint _value) public override returns (bool success) {
         if (_value > _allowance[_from][msg.sender]) {
             return false;
         }
@@ -102,13 +101,13 @@ contract SwissEquityToken {
         else return false;
     }
 
-    function approve(address _spender, uint256 _value) public returns (bool success) {
+    function approve(address _spender, uint256 _value) public override returns (bool success) {
         _allowance[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
     }
 
-    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
+    function allowance(address _owner, address _spender) public view override returns (uint256 remaining) {
         return _allowance[_owner][_spender];
     }
 
