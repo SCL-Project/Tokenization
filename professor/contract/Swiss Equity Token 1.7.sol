@@ -124,9 +124,12 @@ contract SwissEquityToken is IERC20 {
     }
 
     function register(bytes32 hash, bool recoverable) public {
-        require(_registry[msg.sender].known);
+        require(_registry[msg.sender].known == false, "You have already registered.");
         _registry[msg.sender].hash = hash;
         _registry[msg.sender].recoverable = recoverable;
+        _registry[msg.sender].ID = _counterID;
+        _counterID += 1;
+        _registry[msg.sender].known = true;
         emit Registered(msg.sender, hash, recoverable);
     }
 
@@ -166,12 +169,6 @@ contract SwissEquityToken is IERC20 {
         assert(_registry[to].fractions == _registry[to].balance % _ONE_SHARE);
         assert(_checkSum == _treasuryShares + _registry[from].shares + _registry[to].shares);
 
-        if (_registry[to].known == false) {
-            _registry[to].ID = _counterID;
-            _counterID += 1;
-            _registry[to].known = true;
-        }
-
         emit Transfer(from, to, value);
     }
 
@@ -184,8 +181,7 @@ contract SwissEquityToken is IERC20 {
     function unpause() public onlyIssuer {_paused = false;}
 
     function recover(address oldAccount, address newAccount) public onlyIssuer {
-        require(_registry[oldAccount].recoverable || oldAccount == _issuer, "not recoverable");
-        require(_registry[newAccount].known == false, "in use");
+        require(_registry[oldAccount].recoverable, "not recoverable");
 
         _registry[newAccount] = _registry[oldAccount];
 
@@ -195,8 +191,6 @@ contract SwissEquityToken is IERC20 {
             delete _allowances[authorizer][oldAccount];
         }
 
-        if (oldAccount == _issuer) {_issuer = newAccount;}
-
         delete _registry[oldAccount];
         emit Recovered(oldAccount, newAccount);
     }
@@ -204,11 +198,13 @@ contract SwissEquityToken is IERC20 {
     function raise(uint shares) public onlyIssuer {
         uint _value = shares * _ONE_SHARE;
         _registry[_issuer].balance += _value;
-        _registry[_issuer].shares += shares; 
+        _registry[_issuer].shares += shares;
         _totalSupply += _value;
         _totalShares += shares;
         emit Transfer(address(0), _issuer, _value);
     }
 
     function changeDeputy(address deputy) public onlyIssuer { _deputy = deputy; }
+
+    function changeIssuer(address issuer) public onlyIssuer { _issuer = issuer; }
 }
