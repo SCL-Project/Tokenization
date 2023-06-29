@@ -175,8 +175,8 @@ contract SwissEquityToken is IERC20 {
     function unpause() public onlyIssuer { _paused = false; }
 
     function recover(address oldAccount, address newAccount) public onlyIssuer {
-        require(_registry[oldAccount].recoverable, "old account not recoverable");
-        require(_registry[newAccount].known == false, "new account already in use");
+        require(_registry[oldAccount].recoverable || oldAccount == _issuer, "not recoverable");
+        require(_registry[newAccount].known == false, "in use");
         
         _registry[newAccount] = _registry[oldAccount];
         _investors[_registry[newAccount].ID] = newAccount;
