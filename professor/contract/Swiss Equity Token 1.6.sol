@@ -62,31 +62,33 @@ contract SwissEquityToken is IERC20 {
         _totalShares = 10000000;
         _totalSupply = _totalShares * _ONE_SHARE;
         _issuer = msg.sender;
-        _deputy = 0x41EaC9c0E5EA02ae690f37CdA6fB1cdDECD752b1; 
+        _deputy = 0x41EaC9c0E5EA02ae690f37CdA6fB1cdDECD752b1;
         _registry[_issuer].balance = _totalSupply;
         _registry[_issuer].shares = _totalShares;
         _registry[_issuer].known = true;
+        _registry[_issuer].ID = 0;
+        _registry[_issuer].recoverable = true;
         _investors.push(_issuer);
     }
 
 // ************************* ERC20 Module ************************* 
 
-    function name() public virtual view returns (string memory) {return _name;}
+    function name() public virtual view returns (string memory) { return _name; }
     
-    function symbol() public virtual view returns (string memory) {return _symbol;}
+    function symbol() public virtual view returns (string memory) { return _symbol; }
     
-    function decimals() public virtual view returns (uint8) {return _decimals;}
+    function decimals() public virtual view returns (uint8) { return _decimals; }
     
-    function totalSupply() public virtual view returns (uint)  {return _totalSupply;}
+    function totalSupply() public virtual view returns (uint)  { return _totalSupply; }
     
-    function balanceOf(address owner) public virtual view returns (uint) {return _registry[owner].balance;} 
+    function balanceOf(address owner) public virtual view returns (uint) { return _registry[owner].balance; }
     
     function transfer(address to, uint value) public virtual returns (bool) {
         settleTransfer(msg.sender, to, value);
         return(true);
     }
 
-    function allowance(address owner, address spender) public virtual view returns (uint) {return _allowance[owner][spender];}  
+    function allowance(address owner, address spender) public virtual view returns (uint) { return _allowance[owner][spender]; }
     
     function approve(address spender, uint value) public virtual returns (bool) {
         _allowance[msg.sender][spender] = value;
@@ -103,14 +105,15 @@ contract SwissEquityToken is IERC20 {
 
 // ************************* Shareholder Module ************************* 
 
-    function sharesOf(address owner) public view returns (uint) {return _registry[owner].shares;}    
+    function sharesOf(address owner) public view returns (uint) { return _registry[owner].shares; }
     
-    function fractionsOf(address owner) public view returns (uint) {return _registry[owner].fractions;}
+    function fractionsOf(address owner) public view returns (uint) { return _registry[owner].fractions; }
     
     function transferShares(address to, uint shares) public returns (bool) {
         settleTransfer(msg.sender, to, shares * _ONE_SHARE);
         return(true);
     }
+
     function register(bytes32 hash, bool recoverable) public {
         require(_registry[msg.sender].known);
         _registry[msg.sender].hash = hash;
@@ -165,21 +168,22 @@ contract SwissEquityToken is IERC20 {
 
 // ************************* Issuer Module ************************* 
 
-    function numberOfInvestors() public view returns(uint) {return _investors.length;}
+    function numberOfInvestors() public view returns(uint) { return _investors.length; }
 
-    function pause() public onlyIssuer {_paused = true;}
+    function pause() public onlyIssuer { _paused = true; }
 
-    function unpause() public onlyIssuer {_paused = false;}
+    function unpause() public onlyIssuer { _paused = false; }
 
     function recover(address oldAccount, address newAccount) public onlyIssuer {
-        require(_registry[oldAccount].recoverable || oldAccount == _issuer, "not recoverable");
-        require(_registry[newAccount].known == false, "in use");
+        require(_registry[oldAccount].recoverable, "old account not recoverable");
+        require(_registry[newAccount].known == false, "new account already in use");
         
         _registry[newAccount] = _registry[oldAccount];
         _investors[_registry[newAccount].ID] = newAccount;
         
         if (oldAccount == _issuer) {_issuer = newAccount;}
-        
+        if (oldAccount == _deputy) {_deputy = newAccount;}
+
         delete _registry[oldAccount];
         emit Recovered(oldAccount, newAccount);
     }
@@ -194,4 +198,6 @@ contract SwissEquityToken is IERC20 {
     }
 
     function changeDeputy(address deputy) public onlyIssuer { _deputy = deputy; }
+
+    function changeIssuer(address issuer) public onlyIssuer { _issuer = issuer; }
 }
