@@ -66,8 +66,6 @@ contract SwissEquityToken is IERC20 {
         _registry[_issuer].balance = _totalSupply;
         _registry[_issuer].shares = _totalShares;
         _registry[_issuer].known = true;
-        _registry[_issuer].ID = 0;
-        _registry[_issuer].recoverable = true;
         _investors.push(_issuer);
     }
 
@@ -199,5 +197,4 @@ contract SwissEquityToken is IERC20 {
 
     function changeDeputy(address deputy) public onlyIssuer { _deputy = deputy; }
 
-    function changeIssuer(address issuer) public onlyIssuer { _issuer = issuer; }
 }
