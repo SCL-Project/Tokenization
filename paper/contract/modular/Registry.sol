@@ -10,10 +10,11 @@ abstract contract Registry is ERC20 {
         uint256 fractionalPartOfTokenBalance;
         bytes32 registrationHash;
         bool recoverable;
+        uint timeOfFirstUse;
     }
 
     mapping(address => InvestorData) public registry;
-    uint256 private fractionedShares;
+        uint256 private fractionedShares;
     uint256 private ONE_TOKEN;
 
     constructor() {
@@ -53,10 +54,16 @@ abstract contract Registry is ERC20 {
         
         if (from != address(0)) {
             calculateShares(from);
+            if (registry[from].timeOfFirstUse == 0) {
+                registry[from].timeOfFirstUse = block.timestamp;
+            }
         }
 
         if (to != address(0)) {
             calculateShares(to);
+            if (registry[to].timeOfFirstUse == 0) {
+                registry[to].timeOfFirstUse = block.timestamp;
+            }
         }
 
         uint256 fractionsFromAfter = registry[from].fractionalPartOfTokenBalance;

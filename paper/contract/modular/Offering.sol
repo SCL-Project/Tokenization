@@ -34,7 +34,7 @@ abstract contract Offering is Registry {
 
     function buyTokens() public payable returns (uint) {
         require(offering, "Offering: No Tokens are being offered at the moment");
-        uint256 _buyAmount = msg.value / offeringPrice;
+        uint256 _buyAmount = 10**decimals() * msg.value / offeringPrice;
 
         if (_buyAmount >= offeringAmount) {
             uint256 repayment = (msg.value - (offeringAmount * offeringPrice));

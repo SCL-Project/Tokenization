@@ -1,6 +1,6 @@
 // *******************************************
 // SPDX-License-Identifier: MIT
-// Swiss Equity Token 1.8
+// Swiss Equity Token 1.9
 // Author: Smart Contracts Lab, UZH
 // Created: June 29, 2023
 // *******************************************
