@@ -1,12 +1,14 @@
 .container1 {
     margin: auto;
-    margin-top: 50px;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
     width: 80%;
     max-width: 750px;
-    min-height: 50%;
+    min-height: 50vh; /* Use viewport units for minimum height */
     background: #006837;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 25px;
+    border-radius: 20px;
+    overflow: auto; /* Add overflow auto to enable scrolling if necessary */
   }
   
 
@@ -37,4 +39,10 @@
 
 .customTextField:hover {
     background-color: #eaebeb;
+}
+
+@media screen and (max-width: 600px) {
+    .container1 {
+        margin-bottom: 35vh;
+    }
 }

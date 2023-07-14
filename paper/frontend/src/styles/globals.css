@@ -2,8 +2,8 @@ body {
   background-color: #05503C !important;
   background-image: url('/BackgroundSpiral.svg');
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  /* background-position: center; */
+  /* background-size: cover; */
   font-family: 'Inter';
   font-style: normal;
   min-height: 100vh;
@@ -26,6 +26,14 @@ p {
   text-decoration: none !important;
 }
 
+a {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
 button {
   font-family: 'Inter';
   font-style: normal;
@@ -34,6 +42,7 @@ button {
   line-height: 40px;
   text-decoration: none !important;
 }
+
   
 @media only screen and (max-width: 767px) {
   h1 {

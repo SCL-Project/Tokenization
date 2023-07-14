@@ -2,21 +2,24 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import styles from '../styles/CompanyBox.module.css';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const Offering = ({ web3, account, contract }) => {
-    const [msg, setMsg] = useState("Enter your announcement here");
-
+    const [msg, setMsg] = useState('');
+    const [loading, setLoading] = useState(false);
     
     const handleChange = (e) => {
         setMsg(e.target.value);
     };
     
     const handleAnnouncement = async () => {
+        setLoading(true);
         try {
             await contract.methods.announcement(msg).send({ from: account });
         } catch (err) {
             console.error(err);
         }
+        setLoading(false);
     };
     return (
         <div>
@@ -26,23 +29,27 @@ const Offering = ({ web3, account, contract }) => {
                 label="Input your announcement"
                 multiline
                 rows={4}
-                defaultValue=""
+                onChange={handleChange}
                 className={styles.customTextField}
                 sx={{ 
                     width: '100%', 
                 }}
                 />
             <div className={styles.flexButton}>
-                <Button 
+                <LoadingButton 
+                    loading={loading}
+                    loadingPosition="end"
                     variant="contained"
                     onClick={handleAnnouncement}
-                    className={styles.button}
                     sx={{ 
+                        backgroundColor: 'white', 
+                        color: 'black', 
+                        '&:hover': { backgroundColor: 'grey', },
                         width: '100%', 
                         mt: 1,
                     }}>
                         Send Announcement
-                </Button>
+                </LoadingButton>
             </div>
         </div>
     );

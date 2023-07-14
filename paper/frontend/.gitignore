@@ -32,3 +32,9 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# firebase
+scltokenization-firebase-adminsdk-zn7rc-f106ed0482.json
+
+# scripts
+/scripts

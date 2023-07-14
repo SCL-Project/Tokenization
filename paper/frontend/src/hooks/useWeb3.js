@@ -7,6 +7,7 @@ const useWeb3 = () => {
   const [web3, setWeb3] = useState(null);
   const [account, setAccount] = useState(null);
   const [contract, setContract] = useState(null);
+  const [owners, setOwners] = useState(null);
   const { setEthereumAddress } = useEthereumAddress();
 
   useEffect(() => {
@@ -23,9 +24,13 @@ const useWeb3 = () => {
         setEthereumAddress(accounts[0]);
 
         // Load the smart contract
-        const contractAddress = '0x5b2Ad89fDba23B124590d303750F0EE82b84F3A5';
+        const contractAddress = '0xF35B94930547A76cA9e477C27DC16f8E5cF31b9E';
         const contract = new web3.eth.Contract(abi, contractAddress);
         setContract(contract);
+
+        // Load the owners
+        const owners = await contract.methods.owners().call();
+        setOwners(owners);
       };
       loadWeb3AndBlockchainData();
     } else {
@@ -33,7 +38,7 @@ const useWeb3 = () => {
     }
   }, []);
 
-  return { web3, account, contract };
+  return { web3, account, contract, owners };
 };
 
 export default useWeb3;

@@ -56,6 +56,7 @@ const StatusBar = () => {
         }}>
                     <p>{`Current Price: ${tokenPrice}`}</p>
                     <p>{`Available shares for purchase: ${currentOffer}`}</p>
+                    <p>{`Current Contract Address: ${contract ? contract.options.address : 'Contract not loaded'}`}</p>
         </div>
     );
 };

@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import styles from '../styles/CompanyBox.module.css';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const Offering = ({ web3, account, contract }) => {
-    const [amount, setAmount] = useState(0);
-    var [price, setPrice] = useState(0);
+    let [amount, setAmount] = useState(0);
+    let [price, setPrice] = useState(0);
+    const [loadingStart, setLoadingStart] = useState(false);
+    const [loadingStop, setLoadingStop] = useState(false);
+
 
 
     const handleAmountChange = (e) => {
@@ -17,21 +21,28 @@ const Offering = ({ web3, account, contract }) => {
     };
 
     const handleStart = async () => {
+        setLoadingStart(true);
         if (amount <= 0 || price < 0) return;
         try {
             price = web3.utils.toWei(price, 'ether');
+            amount = web3.utils.toWei(amount, 'ether');
             await contract.methods.startOffering(price, amount).send({ from: account });
+            setAmount('');
+            setPrice('');
         } catch (err) {
             console.error(err);
         }
+        setLoadingStart(false);
     };
 
     const handleStop = async () => {
+        setLoadingStop(true);
         try {
             await contract.methods.stopOffering().send({ from: account });
         } catch (err) {
             console.error(err);
         }
+        setLoadingStop(false);
     };
 
     return (
@@ -65,27 +76,35 @@ const Offering = ({ web3, account, contract }) => {
                 className={styles.customTextField}
             />
             <div className={styles.flexButton}>
-                <Button 
+                <LoadingButton 
                     variant="contained"
+                    loadingPosition="end"
+                    loading={loadingStart}
                     onClick={handleStart}
-                    className={styles.button}
                     sx={{ 
+                        backgroundColor: 'white', 
+                        color: 'black', 
+                        '&:hover': { backgroundColor: 'grey', },
                         width: { xs: '100%', sm: 'calc(50% - 8px)' }, 
                         mt: 1,
                         mr: { xs: 0, sm: 1 },                           
                     }}>
                         Start Offering
-                </Button>
-                <Button 
+                </LoadingButton>
+                <LoadingButton 
                     variant="contained"
+                    loadingPosition="end"
+                    loading={loadingStop}
                     onClick={handleStop}
-                    className={styles.button}
-                    sx={{                            
+                    sx={{    
+                        backgroundColor: 'white', 
+                        color: 'black', 
+                        '&:hover': { backgroundColor: 'grey', },                        
                         width: { xs: '100%', sm: '50%' }, 
                         mt: 1,                           
                     }}>
                         Stop Offering
-                </Button>
+                </LoadingButton>
             </div>
         </div>
         
