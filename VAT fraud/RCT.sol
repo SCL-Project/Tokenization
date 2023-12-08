@@ -231,21 +231,17 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         NFTData[_tokenID].current_country = _country;
     }
 
-
     function changeGood(string memory _good, uint256 _tokenId) public onlyOwner {
         NFTData[_tokenId].good = _good;
     } 
-
-    
+ 
     function changeQuantity(uint256 _quantity, uint256 _tokenId) public onlyOwner {
         NFTData[_tokenId].quantity = _quantity;
     } 
-
-    
+ 
     function changeTotalPrice(uint256  _total_price, uint256 _tokenId) public onlyOwner {
         NFTData[_tokenId].total_price = _total_price;
     } 
-
 
     /**
      * @dev Registered companies can be locked by the government (onlyOwner) in case of fradulent actions
@@ -413,7 +409,6 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         emit SellerTokenCreated(msg.sender, tokenID1);
         emit BuyerTokenCreated(_buyerAddr, tokenID2);
     }
-
 
     /**
      * @dev Creates receipt tokens for a transaction involving only a seller. This function mints one token:
