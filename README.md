@@ -3,9 +3,8 @@
 ## Enhancing Tax Compliance: Exploring the Potential of Smart Contracts regarding VAT Fraud
 
 ### Description
-This project explores the integration of the VAT (Value Added Tax) system with blockchain technology. Our research focuses on developing three smart contracts: ReceiptTokenContract, VATTokenContract, and CrossBorderContract, to facilitate and streamline VAT processes.
-
-
+The Tokenization Team is developing a prototype for a smart contract solution for the Value-Added-Tax (VAT) system in Switzerland. The objective of this prototype is to prevent VAT fraud, enhance system efficiency, transparency and security, and thus aid the government in ensuring their compliance and to safeguard revenue.
+Similar to Ainsworth et al. (2016), the team proposed incorporating a VAT token (ERC20 Token) into their smart contracts solution for VAT payments. Moreover, a receipt token (ERC721) can be generated after a successful VAT payment to the government, which provides an unfalsifiable proof of the transaction for both buyers and sellers of goods or services.
 
 ### Background
 
