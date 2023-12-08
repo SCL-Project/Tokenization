@@ -90,6 +90,6 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 
 ### Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
-- [Samuel Clauss](https://github.com/SamuelClauss)
+- <a href="https://github.com/SamuelClauss" style="text-decoration: none; color: black;">Samuel Clauss</a>
 
 ## FAQs
