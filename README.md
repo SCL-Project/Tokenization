@@ -13,6 +13,7 @@
 ### Description
 The Tokenization Team is developing a prototype for a smart contract solution for the Value-Added-Tax (VAT) system in Switzerland and the border to Germany. The objective of this prototype is to prevent VAT fraud, enhance system efficiency, transparency and security, and thus aid the government in ensuring their compliance and to safeguard revenue.
 Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (ERC20 Token) into their smart contracts solution for VAT payments. Moreover, a ReceiptToken (ERC721) can be generated after a successful VAT payment to the government, which provides an unfalsifiable proof of the transaction for both buyers and sellers of goods or services.
+
 <img src="VAT Fraud/Graphics/Prototype.png" width="700"/>
 
 ### Background
@@ -65,7 +66,7 @@ The need to change the VAT system arises from its inherent inefficiencies and su
   - **Multi-Government Accessibility**: Designed to be operated by multiple government entities (Switzerland & Germany, reflecting the collaborative nature of international trade.
 
 ### Installation to Compile, Deploy & Interact with the Contracts
-To interact with the `VATToken`, `ReceiptTokenContract`, and `CrossBorderContract` in Remix, follow these steps:
+    To interact with the `VATToken`, `ReceiptTokenContract`, and `CrossBorderContract` in Remix, follow these steps:
 
 1. **Open Remix IDE:**
    - Go to [Remix Ethereum IDE](https://remix.ethereum.org/).
