@@ -35,9 +35,6 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 [Provide installation instructions.]
 
 ### Contributors
-- Dario Ganz **dario.ganz@uzh.ch** [![LinkedIn][linkedin-shield]][linkedin-url]
-<!-- MARKDOWN LINKS & IMAGES -->
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://www.linkedin.com/in/dario-ganz-a303281a2/
+- Dario Ganz **dario.ganz@uzh.ch** [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://www.linkedin.com/in/dario-ganz-a303281a2/)
 
 ## FAQs
