@@ -3,6 +3,8 @@
 ## Description
 This project explores the integration of the VAT (Value Added Tax) system with blockchain technology. Our research focuses on developing three smart contracts: ReceiptTokenContract, VATTokenContract, and CrossBorderContract, to facilitate and streamline VAT processes.
 
+
+
 ## Background
 [Provide background information about the current challenges in the VAT system and the potential of blockchain technology.]
 
@@ -22,5 +24,15 @@ This project explores the integration of the VAT (Value Added Tax) system with b
 ## Installation
 [Provide installation instructions.]
 
-```bash
-# Example installation commands
+## Contributors
+[![Contributors][contributors-shield]][contributors-url]
+[![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/samuel-clauss-28611b282/?trk=public_profile_samename-profile&originalSubdomain=ch]
+
+[![Contributors][contributors-shield]][contributors-url]
+[![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/dario-ganz-a303281a2/]
+
+## Contact
+
+## Acknowledgements
+
+## FAQs
