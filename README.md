@@ -1,6 +1,5 @@
-# Tokenization
+# Tokenization (Current Research)
 
-## Current Research
 ## Enhancing Tax Compliance: Exploring the Potential of Smart Contracts regarding VAT Fraud
 
 ### Audience
