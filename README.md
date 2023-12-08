@@ -3,11 +3,11 @@
 ## Enhancing Tax Compliance: Exploring the Potential of Smart Contracts regarding VAT Fraud
 
 ### Audience
-#### Tax Authorities
-#### Governments
-#### Companies
-#### Policy Makers
-#### Students & Researchers
+- **Tax Authorities**
+- **Governments**
+- **Companies**
+- **Policy Makers**
+- **Students & Researchers**
 
 ### Description
 The Tokenization Team is developing a prototype for a smart contract solution for the Value-Added-Tax (VAT) system in Switzerland. The objective of this prototype is to prevent VAT fraud, enhance system efficiency, transparency and security, and thus aid the government in ensuring their compliance and to safeguard revenue.
