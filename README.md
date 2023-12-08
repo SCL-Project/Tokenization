@@ -2,7 +2,7 @@
 
 ## Enhancing Tax Compliance: Exploring the Potential of Smart Contracts regarding VAT Fraud
 
-<h3 style="color: #1F7555;">Audience</h3>
+### Audience
 - **Tax Authorities**
 - **Governments**
 - **Companies**
