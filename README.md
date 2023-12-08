@@ -89,7 +89,7 @@ The need to change the VAT system arises from its inherent inefficiencies and su
    - Use the provided fields and buttons to call functions of the contract, such as creating tokens, transferring ownership, setting rates, etc.
 
 ### Contributors
-- <a href="https://github.com/darioganz" style="text-decoration: none; color: inherit;">Dario Ganz</a>
+- <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
 - [Samuel Clauss](https://github.com/SamuelClauss)
 
 ## FAQs
