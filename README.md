@@ -42,7 +42,4 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 [contributors-url]: https://github.com/your-repo/your-project/graphs/contributors
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 
-
-### Acknowledgements
-
 ## FAQs
