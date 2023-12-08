@@ -24,7 +24,7 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 - **Features**: [List the key features.]
 
 #### [VATTokenContract](VAT%20fraud/VATTokenContract.sol)
-- **Purpose**: The primary purpose of the VATTokenContract is an ERC20 Contract to digitize and manage the VAT process, bringing increased transparency, efficiency, and security to tax transactions. The VAT payment in this contract is also the basis to be able to create a ReceiptToken. This contract aims to simplify VAT payments and refunds, reduce the potential for fraud, and streamline tax administration. By leveraging blockchain technology, it offers an innovative solution to traditional VAT challenges, particularly in complex tax calculations including input tax deduction.
+- **Purpose**: [The primary purpose of the VATTokenContract is an ERC20 Contract to digitize and manage the VAT process, bringing increased transparency, efficiency, and security to tax transactions. The VAT payment in this contract is also the basis to be able to create a ReceiptToken. This contract aims to simplify VAT payments and refunds, reduce the potential for fraud, and streamline tax administration. By leveraging blockchain technology, it offers an innovative solution to traditional VAT challenges, particularly in complex tax calculations including input tax deduction.]
 - **Features**:
   - **Tokenization of VAT**: The contract creates a digital representation of VAT credits, allowing for seamless and transparent tracking of VAT payments and obligations.
   - **ERC20 Compliance**: Adheres to the ERC20 standard, ensuring compatibility with a wide range of wallets and services in the Ethereum ecosystem.
