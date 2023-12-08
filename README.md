@@ -2,7 +2,7 @@
 
 ## Enhancing Tax Compliance: Exploring the Potential of Smart Contracts regarding VAT Fraud
 
-### Audience
+<h3 style="color: #1F7555;">Audience</h3>
 - **Tax Authorities**
 - **Governments**
 - **Companies**
@@ -91,5 +91,3 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 ### Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
 - <a href="https://github.com/SamuelClauss" style="text-decoration: none; color: black;">Samuel Clauss</a>
-
-## FAQs
