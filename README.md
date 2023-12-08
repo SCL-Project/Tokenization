@@ -19,7 +19,7 @@ Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (
 The need to change the VAT system arises from its inherent inefficiencies and susceptibility to fraud, as its all-phase taxation structure leads to complex calculations and creates opportunities for a range of fraudulent activities. Moreover, in Switzerland, common evasion methods like smuggling, undervaluation, and misuse of tax rates, as reported by the Bundesamt für Zoll und Grenzsicherheit (BAZG), highlight the persistent challenges in VAT administration, underscoring the urgency for systemic reform.
 
 ### Smart Contracts
-#### ReceiptTokenContract
+#### [ReceiptTokenContract](VAT%20fraud/CrossBorderContract.sol)
 - **Purpose**: [Explain the purpose of this contract.]
 - **Features**: [List the key features.]
 
