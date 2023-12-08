@@ -18,19 +18,21 @@ Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (
 ### Background
 The need to change the VAT system arises from its inherent inefficiencies and susceptibility to fraud, as its all-phase taxation structure leads to complex calculations and creates opportunities for a range of fraudulent activities. Moreover, in Switzerland, common evasion methods like smuggling, undervaluation, and misuse of tax rates, as reported by the Bundesamt für Zoll und Grenzsicherheit (BAZG), highlight the persistent challenges in VAT administration, underscoring the urgency for systemic reform.
 
+## Assumptions
+
 ### Smart Contracts
 #### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol)
 - **Purpose**:
     The ReceiptTokenContract is an ERC721 contract and is a fundamental part of our blockchain-based VAT system, specifically designed to tokenize the buying and selling process. It aims to provide a transparent and immutable record of transactions, thereby significantly reducing the potential of VAT fraud. The contract plays a critical role in the digitization of receipts and VAT records, ensuring that every transaction is accurately and securely documented on the blockchain including details about the good or service. This system is particularly valuable for tracking and auditing purposes, providing a reliable and efficient means of managing VAT-related information. This means that the owner can present the receipt to the tax authority and transport the goods across the border in a transparent and legal manner. 
 - **Features**:
   - **Tokenization of Transactions**: Issues ERC721 tokens (NFTs) to represent individual transactions, ensuring a unique and tamper-proof record of each sale and purchase.
-- **Seller and Buyer Tokens**: Differentiates between tokens issued to sellers and buyers, encapsulating the details of each party's involvement in the transaction.
-- **VAT Calculation and Recording**: Calculates VAT based on transaction values and stores this information within each token, streamlining the tax recording process.
-- **Integration with VATTokenContract**: Works in conjunction with the VATTokenContract for efficient VAT management and tax refund processes.
-- **Enhanced Transparency in Supply Chains**: Tracks and records the usage of products to produce further processed goods in supply chains, contributing to greater transparency and accountability.
-- **Secure Company Registration and Management**: Manages the registration of companies, ensuring that only authorized entities can create receipt tokens.
-- **Locking Mechanism for Companies**: Provides a security feature to lock companies in case of fraudulent activities, enhancing overall system integrity.
-- **Cross-Border Functionality**: Coordinates with the CrossBorderContract for international transactions, handling different VAT rates and regulations.
+  - **Seller and Buyer Tokens**: Differentiates between tokens issued to sellers and buyers, encapsulating the details of each party's involvement in the transaction.
+  - **VAT Calculation and Recording**: Calculates VAT based on transaction values and stores this information within each token, streamlining the tax recording process.
+  - **Integration with VATTokenContract**: Works in conjunction with the VATTokenContract for efficient VAT management and tax refund processes.
+  - **Enhanced Transparency in Supply Chains**: Tracks and records the usage of products to produce further processed goods in supply chains, contributing to greater transparency and accountability.
+  - **Secure Company Registration and Management**: Manages the registration of companies, ensuring that only authorized entities can create receipt tokens.
+  - **Locking Mechanism for Companies**: Provides a security feature to lock companies in case of fraudulent activities, enhancing overall system integrity.
+  - **Cross-Border Functionality**: Coordinates with the CrossBorderContract for international transactions, handling different VAT rates and regulations.
 
 #### [VATTokenContract](VAT%20fraud/VATTokenContract.sol)
 - **Purpose**:
@@ -57,8 +59,33 @@ The need to change the VAT system arises from its inherent inefficiencies and su
   - **Integration with VATToken and ReceiptTokenContract**: Works in conjunction with VATTokenContract for tax payments and ReceiptTokenContract for validating transaction details.
   - **Multi-Government Accessibility**: Designed to be operated by multiple government entities (Switzerland & Germany, reflecting the collaborative nature of international trade.
 
-### Installation
-[Provide installation instructions.]
+### Installation to Compile, Deploy & Interact with the Contracts
+
+    1. **Open Remix IDE:**
+       - Go to [Remix Ethereum IDE](https://remix.ethereum.org/).
+    
+    2. **Create the Contract Files:**
+       - In the File Explorer pane of Remix, create new files for each contract (`VATToken.sol`, `ReceiptTokenContract.sol`, `CrossBorderContract.sol`).
+       - Copy and paste the Solidity code of each respective contract into these files.
+    
+    3. **Compile the Contracts:**
+       - Go to the Solidity Compiler tab and select the appropriate compiler version (e.g., `0.8.20`).
+       - Click the 'Compile' button for each contract file.
+    
+    4. **Deploy the Contracts:**
+       - Switch to the 'Deploy & Run Transactions' tab.
+       - Connect to your chosen Ethereum environment using the 'Environment' dropdown.
+       - Select the contract you wish to deploy from the 'Contract' dropdown.
+       - Enter any necessary constructor parameters.
+       - Click 'Deploy' to deploy each contract. 
+       - After deployment, the contracts will appear in the 'Deployed Contracts' section on the botom of the pannel.
+
+    5. **Linking Contracts:**
+       - The 3 contracts need to interact with each other (e.g., `ReceiptTokenContract` needs the address of `VATToken`), ensure you copy the deployed contract addresses and set them using the appropriate functions in the respective contracts.
+    
+    6. **Interact with the Contracts:**
+       - In the 'Deployed Contracts' section, you can interact with each contract's functions.
+       - Use the provided fields and buttons to call functions of the contract, such as creating tokens, transferring ownership, setting rates, etc.
 
 ### Contributors
 - [Dario Ganz](https://github.com/darioganz)
