@@ -19,6 +19,11 @@ Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (
 The need to change the VAT system arises from its inherent inefficiencies and susceptibility to fraud, as its all-phase taxation structure leads to complex calculations and creates opportunities for a range of fraudulent activities. Moreover, in Switzerland, common evasion methods like smuggling, undervaluation, and misuse of tax rates, as reported by the Bundesamt für Zoll und Grenzsicherheit (BAZG), highlight the persistent challenges in VAT administration, underscoring the urgency for systemic reform.
 
 ## Assumptions
+- Deployment on ethereum blockchain: Assumption of integrity of the blockchain data (in a real world adoption a private blockchain would be expedient)
+- Government collaboration
+- Adoption by businesses
+- No dependency on oracles
+- Scalability of the blockchain
 
 ### Smart Contracts
 #### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol)
@@ -82,7 +87,7 @@ The need to change the VAT system arises from its inherent inefficiencies and su
    - After deployment, the contracts will appear in the 'Deployed Contracts' section at the bottom of the panel.
 
 5. **Linking Contracts:**
-   - Since the 3 contracts need to interact with each other (e.g., `ReceiptTokenContract` needs the address of `VATToken`), ensure you copy the deployed contract addresses and set them using the appropriate functions in the respective contracts.
+   - Since the 3 contracts need to interact with each other (e.g., `ReceiptTokenContract` needs the address of `VATTokenContract`), ensure you copy the deployed contract addresses and set them using the appropriate functions in the respective contracts.
 
 6. **Interact with the Contracts:**
    - In the 'Deployed Contracts' section, you can interact with each contract's functions.
