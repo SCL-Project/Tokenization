@@ -60,33 +60,6 @@ The need to change the VAT system arises from its inherent inefficiencies and su
   - **Multi-Government Accessibility**: Designed to be operated by multiple government entities (Switzerland & Germany, reflecting the collaborative nature of international trade.
 
 ### Installation to Compile, Deploy & Interact with the Contracts
-
-    1. **Open Remix IDE:**
-       - Go to [Remix Ethereum IDE](https://remix.ethereum.org/).
-    
-    2. **Create the Contract Files:**
-       - In the File Explorer pane of Remix, create new files for each contract (`VATToken.sol`, `ReceiptTokenContract.sol`, `CrossBorderContract.sol`).
-       - Copy and paste the Solidity code of each respective contract into these files.
-    
-    3. **Compile the Contracts:**
-       - Go to the Solidity Compiler tab and select the appropriate compiler version (e.g., `0.8.20`).
-       - Click the 'Compile' button for each contract file.
-    
-    4. **Deploy the Contracts:**
-       - Switch to the 'Deploy & Run Transactions' tab.
-       - Connect to your chosen Ethereum environment using the 'Environment' dropdown.
-       - Select the contract you wish to deploy from the 'Contract' dropdown.
-       - Enter any necessary constructor parameters.
-       - Click 'Deploy' to deploy each contract. 
-       - After deployment, the contracts will appear in the 'Deployed Contracts' section on the botom of the pannel.
-
-    5. **Linking Contracts:**
-       - The 3 contracts need to interact with each other (e.g., `ReceiptTokenContract` needs the address of `VATToken`), ensure you copy the deployed contract addresses and set them using the appropriate functions in the respective contracts.
-    
-    6. **Interact with the Contracts:**
-       - In the 'Deployed Contracts' section, you can interact with each contract's functions.
-       - Use the provided fields and buttons to call functions of the contract, such as creating tokens, transferring ownership, setting rates, etc.
-
     To interact with the `VATToken`, `ReceiptTokenContract`, and `CrossBorderContract` in Remix, follow these steps:
 
 1. **Open Remix IDE:**
@@ -114,8 +87,9 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 6. **Interact with the Contracts:**
    - In the 'Deployed Contracts' section, you can interact with each contract's functions.
    - Use the provided fields and buttons to call functions of the contract, such as creating tokens, transferring ownership, setting rates, etc.
+
 ### Contributors
-- [Dario Ganz](https://github.com/darioganz)
+- <a href="https://github.com/darioganz" style="text-decoration: none; color: inherit;">Dario Ganz</a>
 - [Samuel Clauss](https://github.com/SamuelClauss)
 
 ## FAQs
