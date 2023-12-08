@@ -66,8 +66,8 @@ The need to change the VAT system arises from its inherent inefficiencies and su
   - **Multi-Government Accessibility**: Designed to be operated by multiple government entities (Switzerland & Germany, reflecting the collaborative nature of international trade.
 
 ### Installation to Compile, Deploy & Interact with the Contracts
-    To interact with the `VATToken`, `ReceiptTokenContract`, and `CrossBorderContract` in Remix, follow these steps:
 
+To interact with the `VATToken`, `ReceiptTokenContract`, and `CrossBorderContract` in Remix, follow these steps:
 1. **Open Remix IDE:**
    - Go to [Remix Ethereum IDE](https://remix.ethereum.org/).
 
