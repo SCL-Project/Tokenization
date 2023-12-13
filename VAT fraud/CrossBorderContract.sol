@@ -1,18 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "./VATToken.sol";
+import "./VATToken_DE.sol";
+import "./VATToken_CH.sol";
 import "./RCT.sol";
 
 /// @title CrossBorderContract
 /// @author Samuel Clauss & Dario Ganz
 contract CrossBorderContract {
-    address VATTokenContractAddress;
-    address RCTContractAddress; 
     ReceiptTokenContract public RCTContract;
-    VATToken public VATTokenContract;
-    bool RCTAddressIsSet;
-    bool VATTokenIsSet;
+    VATToken_CH public VAT_CH_Contract;
+    VATToken_DE public VAT_DE_Contract;    
     address[] private owners;
 
     /**
@@ -20,16 +18,34 @@ contract CrossBorderContract {
      * @param _owners The address that will be granted the ownership of the contract
      *        In our case the government will have the access.
      */
-    constructor(address[] memory _owners) {
-        for (uint i = 0; i < _owners.length; i++) {
+    constructor(address[] memory _owners, address _RCTAddress, address VAT_CH_Address, address VAT_DE_Address) {
+        for (uint24 i = 0; i < _owners.length; i++) {
             isOwner[_owners[i]] = true;
             owners.push(_owners[i]);
         }
+        RCTContract = ReceiptTokenContract(_RCTAddress);
+        VAT_CH_Contract = VATToken_CH(VAT_CH_Address);
+        VAT_DE_Contract = VATToken_DE(VAT_DE_Address);
+    }
+
+    struct Receipt {
+        string Type;
+        string buyer;
+        string seller;
+        string good;
+        string currency;
+        string country_of_sale;
+        string current_country;
+        uint32 quantity;
+        uint40 total_price;
+        uint40 VAT_amount;
+        uint64 TwinTokenID;
+        bool isRefunded;
     }
 
     //----------------------------Events---------------------------------
 
-    event CrossedBorder(string from, string to, uint256 tokenID);
+    event CrossedBorder(string from, string to, uint64 tokenID);
 
     //----------------------------Mappings-------------------------------
 
@@ -134,18 +150,13 @@ contract CrossBorderContract {
      * @param _from The country from which the product is being exported
      * @param _to The country to which the product is being exported
      */
-    function CrossBorder(uint256 _tokenID, string memory _from, string memory _to) external onlyRegisteredAndUnlockedCompanies {
-        string memory Type;
-        string memory Country;
-        string memory good;
-        uint256 VAT_amount;
-        uint256 price;
+    function CrossBorder(uint64 _tokenID, string memory _from, string memory _to) external onlyRegisteredAndUnlockedCompanies {
+        string memory Type = RCTContract.getNFTData(_tokenID).Type;
+        string memory Country = RCTContract.getNFTData(_tokenID).country_of_sale;
+        string memory good = RCTContract.getNFTData(_tokenID).good;
+        uint40 VAT_amount = RCTContract.getNFTData(_tokenID).VAT_amount;
+        uint40 price = RCTContract.getNFTData(_tokenID).total_price;
 
-        (Type,,,,,,,,,,) = RCTContract.NFTData(_tokenID);
-        (,,,,,Country,,,,,) = RCTContract.NFTData(_tokenID);
-        (,,,good,,,,,,,) = RCTContract.NFTData(_tokenID);
-        (,,,,,,,,VAT_amount,,) = RCTContract.NFTData(_tokenID);
-        (,,,,,,,price,,,) = RCTContract.NFTData(_tokenID);
 
 
 
@@ -158,14 +169,14 @@ contract CrossBorderContract {
         require(keccak256(abi.encodePacked(Type)) == keccak256(abi.encodePacked("BuyerToken")), "You can't export a product you have already sold!");
         require(!ForbiddenGoods[good], "It is forbidden to export or import this good!");
 
-        uint256 taxes_payable = price * VATRates[_to] / 1000;
-        uint256 difference = VAT_amount - taxes_payable;
+        uint40 taxes_payable = price * VATRates[_to] / 1000;
+        uint40 difference = VAT_amount - taxes_payable;
 
         bool TaxesPaid = true;
 
-        if (difference > 0) {
+        if (difference > 0 && price > 300) {
             VATTokenContract.transferGovernment(msg.sender, difference);
-        } else if (difference < 0) {
+        } else if (difference < 0 && price > 300) {
             TaxesPaid = VATTokenContract.payTaxes(msg.sender, difference);
         }
         assert(TaxesPaid); 

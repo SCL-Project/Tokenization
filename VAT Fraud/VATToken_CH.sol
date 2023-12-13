@@ -9,22 +9,39 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 
 /// @title VATTokenContract
 /// @author Samuel Clauss & Dario Ganz
-contract VATToken is ERC20, ERC20Burnable, Ownable, ERC20Permit {
+contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     address CrossBorderContract;
-    address RCTAddress;
     ReceiptTokenContract public RCTContract;
-    bool RCTAddressIsSet;
+    address private RCTAddress;
 
     /**
      * @dev Constructor to initialize the contract of the VATToken
      * @param initialOwner The address that will be granted the ownership of the contract.
      *        in our case the government or to be specific the tax authority
      */
-    constructor(address initialOwner)
-        ERC20("VATToken", "VTT")
+    constructor(address initialOwner, address _RCTAddress)
+        ERC20("VAT_CH", "VGER")
         Ownable(initialOwner)
         ERC20Permit("VATToken")
-    {}
+    {
+        RCTContract = ReceiptTokenContract(_RCTAddress);
+        RCTAddress = _RCTAddress;
+    }
+
+    struct Receipt {
+        string Type;
+        string buyer;
+        string seller;
+        string good;
+        string currency;
+        string country_of_sale;
+        string current_country;
+        uint32 quantity;
+        uint40 total_price;
+        uint40 VAT_amount;
+        uint64 TwinTokenID;
+        bool isRefunded;
+    }
 
 
     //----------------------------Events---------------------------------
@@ -59,7 +76,7 @@ contract VATToken is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @dev Ensures only government entities can mint tokens
      */
     modifier onlyGovernment() {
-        require(msg.sender == address(this) || msg.sender == CrossBorderContract || msg.sender == RCTAddress, "You are not a government authority!");
+        require(msg.sender == address(this) || msg.sender == CrossBorderContract || msg.sender == RCTAddress, "You are not allowed to mint VAT_CH Tokens!");
         _;
     }
 
@@ -110,23 +127,13 @@ contract VATToken is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     /**
-     * @dev Sets the address of the ReceiptTokenContract
-     * @param _address The address of the ReceiptTokenContract
-     */
-    function setRCTCAddress(address _address) public onlyOwner {
-        RCTAddress = _address;
-        RCTContract = ReceiptTokenContract(RCTAddress);
-        RCTAddressIsSet = true;
-    }
-
-    /**
      * @dev Transfers a specified amount of tokens from the contract to a specific address. 
      *      If the contract doesn't have enough tokens, the required amount gets minted.
      *      This function is restricted to the contract owner
      * @param _to The address to which the tokens will be transferred or minted
      * @param _amount The amount of tokens to be transferred or minted
      */
-    function transferGovernment(address _to, uint256 _amount) public onlyGovernment {
+    function transferGovernment(address _to, uint40 _amount) public onlyGovernment {
         if (balanceOf(address(this)) >= _amount) {
             _transfer(address(this), _to, _amount);
         } else {
@@ -165,7 +172,7 @@ contract VATToken is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param _amount The amount of tokens to be paid
      * @return bool Returns true if the tax payment is successful, otherwise false
      */
-    function payTaxes(address _from, uint256 _amount) external onlyGovernment returns(bool) {
+    function payTaxes(address _from, uint40 _amount) external onlyGovernment returns(bool) {
         if (balanceOf(_from) >= _amount) {
             _transfer(_from, address(this), _amount);
             return true;
@@ -178,18 +185,19 @@ contract VATToken is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      *      The function calculates the refund amount based on the tax and percentages of used products associated with the token
      * @param _tokenID The ID of the token for which the tax refund is requested
      */
-    function refundTaxes(uint256 _tokenID) external {
+    function refundTaxes(uint64 _tokenID) external {
+        require(
+            keccak256(abi.encodePacked(RCTContract.getNFTData(_tokenID).current_country)) == keccak256(abi.encodePacked("Switzerland")),
+            "This contract can only refund Tokens from Switzerland!"
+            );
         require(RCTContract.ownerOf(_tokenID) == msg.sender, "You are not the owner of this token!");
-        require(RCTAddressIsSet, "The RCT Contract Address is not yet set!");
-        bool isRefunded;
-        (,,,,,,,,,,isRefunded) = RCTContract.NFTData(_tokenID);
+        bool isRefunded = RCTContract.getNFTData(_tokenID).isRefunded;
         require(isRefunded == false, "This Token has already been refunded or is a BuyerToken!");    
         
-        uint256 refundAmount;
-        (uint256[] memory IDs, uint8[] memory percentages) = RCTContract.getUsedProducts(_tokenID);
-        for (uint256 i = 0; i < IDs.length; i++) {
-            uint256 tax;
-            (,,,,,,,,tax,,) = RCTContract.NFTData(IDs[i]);
+        uint40 refundAmount;
+        (uint64[] memory IDs, uint8[] memory percentages) = RCTContract.getUsedProducts(_tokenID);
+        for (uint24 i = 0; i < IDs.length; i++) {
+            uint40 tax = RCTContract.getNFTData(IDs[i]).VAT_amount;
             refundAmount += tax * percentages[i] / 100;
         }
         if (refundAmount != 0) {
@@ -202,7 +210,7 @@ contract VATToken is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @dev Allows users to buy VAT tokens by withdrawing from their token credit, if the token credit is 0, the TokenCredit is deleted
      * @param _amount The amount of VAT tokens to buy from the TokenCredit
      */
-    function BuyVATTokens(uint256 _amount) public {
+    function BuyVATTokens(uint40 _amount) public {
         require(TokenCredit[msg.sender] >= _amount, "Your balance is not sufficient!");
         mint(msg.sender, _amount);
         TokenCredit[msg.sender] -= _amount;
@@ -212,9 +220,10 @@ contract VATToken is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         emit TokensBought(msg.sender, _amount);
     }
 
-    function SellVATTokens(uint256 _amount) public {
-        require(balanceOf(msg.sender) >= _amount, "You have not enough VATTokens!");
+    function SellVATTokens(uint40 _amount) public {
+        require(balanceOf(msg.sender) >= _amount, "You have not enough VAT_CH Tokens!");
         _transfer(msg.sender, address(this), _amount);
         emit PaymentToBeReleased(msg.sender, _amount);
     }
 }
+
