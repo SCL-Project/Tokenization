@@ -226,4 +226,3 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         emit PaymentToBeReleased(msg.sender, _amount);
     }
 }
-
