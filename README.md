@@ -1,9 +1,9 @@
 # Tokenization (Current Research)
 
 ## Overview
-### Whitepaper: The fundamentals behind the smart contracts
+### [Whitepaper](Whitepaper.md): The fundamentals behind the smart contracts
 ### Smart Contracts
-#### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol): Creates digital ReceiptToken for the buyer & seller
+#### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol): Creates a digital ReceiptToken for the buyer & seller
 #### [VATToken_CH](VAT%20fraud/VATToken_CH.sol): Contract to pay VAT in Switzerland
 #### [VATToken_DE](VAT%20fraud/VATToken_DE.sol): Contract to pay VAT in Germany
 #### [CrossBorderContract](VAT%20fraud/CrossBorderContract.sol): Contract for cross-border transactions and simple border crossings 
