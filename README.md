@@ -1,5 +1,10 @@
 # Tokenization (Current Research)
 
+## Prototype to enhance VAT compliance and mitigate VAT Fraud
+- **Scope:** Switzerland & Germany
+
+The objective of this prototype is to prevent VAT fraud, enhance system efficiency, transparency and security, and thus aid the government in ensuring their compliance and to safeguard revenue. Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (ERC20 Token) for each country into their smart contracts solution for VAT payments. Moreover, a ReceiptToken (ERC721) can be generated after a successful VAT payment to the government, which provides an unfalsifiable proof of the transaction for both buyers and sellers of goods or services. In cross-border transactions and simple crossings of the border, the CrossBorderContract is required to be able to transfer goods.
+
 ## Overview
 #### [Whitepaper](Whitepaper.md): The fundamentals behind the smart contracts
 ### Smart Contracts
@@ -7,11 +12,6 @@
 #### [VATToken_CH](VAT%20fraud/VATToken_CH.sol): Contract to pay VAT in Switzerland
 #### [VATToken_DE](VAT%20fraud/VATToken_DE.sol): Contract to pay VAT in Germany
 #### [CrossBorderContract](VAT%20fraud/CrossBorderContract.sol): Contract for cross-border transactions and simple border crossings 
-
-### Prototype to enhance VAT compliance and mitigate VAT Fraud
-- **Scope:** Switzerland & Germany
-
-The objective of this prototype is to prevent VAT fraud, enhance system efficiency, transparency and security, and thus aid the government in ensuring their compliance and to safeguard revenue. Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (ERC20 Token) for each country into their smart contracts solution for VAT payments. Moreover, a ReceiptToken (ERC721) can be generated after a successful VAT payment to the government, which provides an unfalsifiable proof of the transaction for both buyers and sellers of goods or services. In cross-border transactions and simple crossings of the border, the CrossBorderContract is required to be able to transfer goods.
 
 ### Audience
 - **Tax Authorities**
