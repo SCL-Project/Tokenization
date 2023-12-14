@@ -3,7 +3,7 @@
 ## Overview
 
 ### Whitepaper
-#### [Whitepaper](VAT%20fraud/Whitepaper.md)
+#### [Whitepaper](VAT%20fraud/Whitepaper.md): sdfsdfdsfsdf
 
 ### Smart Contracts
 #### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol)
