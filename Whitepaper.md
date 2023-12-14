@@ -1,13 +1,5 @@
 # Enhancing Tax Compliance: Exploring the Potential of Smart Contracts regarding VAT Fraud
 
-## Audience
-- **Tax Authorities**
-- **Governments**
-- **Companies**
-- **Audit Firms**
-- **Policy Makers**
-- **Students & Researchers**
-
 ## Description
 The Tokenization Team is developing a prototype for a smart contract solution for the Value-Added-Tax (VAT) system in Switzerland and the border to Germany. The objective of this prototype is to prevent VAT fraud, enhance system efficiency, transparency and security, and thus aid the government in ensuring their compliance and to safeguard revenue.
 Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (ERC20 Token) into their smart contracts solution for VAT payments. Moreover, a ReceiptToken (ERC721) can be generated after a successful VAT payment to the government, which provides an unfalsifiable proof of the transaction for both buyers and sellers of goods or services. In cross-border transactions, the CrossBorderContract is required to be able to transfer goods.
