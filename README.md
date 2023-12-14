@@ -1,10 +1,7 @@
 # Tokenization (Current Research)
 
 ## Overview
-
 ### Whitepaper
-#### [Whitepaper](VAT%20fraud/Whitepaper.md): sdfsdfdsfsdf
-
 ### Smart Contracts
 #### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol)
 #### [VATToken_CH](VAT%20fraud/VATToken_CH.sol)
@@ -16,12 +13,6 @@
 
 The objective of this prototype is to prevent VAT fraud, enhance system efficiency, transparency and security, and thus aid the government in ensuring their compliance and to safeguard revenue. Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (ERC20 Token) for each country into their smart contracts solution for VAT payments. Moreover, a ReceiptToken (ERC721) can be generated after a successful VAT payment to the government, which provides an unfalsifiable proof of the transaction for both buyers and sellers of goods or services. In cross-border transactions, the CrossBorderContract is required to be able to transfer goods.
 
-### Smart Contracts
-#### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol)
-#### [VATToken_CH](VAT%20fraud/VATToken_CH.sol)
-#### [VATToken_DE](VAT%20fraud/VATToken_DE.sol)
-#### [CrossBorderContract](VAT%20fraud/CrossBorderContract.sol)
-
 ### Audience
 - **Tax Authorities**
 - **Governments**
@@ -29,12 +20,6 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 - **Audit Firms**
 - **Policy Makers**
 - **Students & Researchers**
-
-### Description
-The Tokenization Team is developing a prototype for a smart contract solution for the Value-Added-Tax (VAT) system in Switzerland and the border to Germany. The objective of this prototype is to prevent VAT fraud, enhance system efficiency, transparency and security, and thus aid the government in ensuring their compliance and to safeguard revenue.
-Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (ERC20 Token) into their smart contracts solution for VAT payments. Moreover, a ReceiptToken (ERC721) can be generated after a successful VAT payment to the government, which provides an unfalsifiable proof of the transaction for both buyers and sellers of goods or services.
-
-<img src="VAT Fraud/Graphics/Prototype.png" width="650"/>
 
 ### Assumptions
 - Deployment on sepolia testnet (ethereum blockchain): Assumption of integrity of the blockchain data (in a real world adoption a private blockchain would be expedient)
