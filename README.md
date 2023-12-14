@@ -6,6 +6,7 @@
 #### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol)
 #### [VATToken_CH](VAT%20fraud/VATToken_CH.sol)
 #### [VATToken_DE](VAT%20fraud/VATToken_DE.sol)
+#### [CrossBorderContract](VAT%20fraud/CrossBorderContract.sol)
 
 ### Audience
 - **Tax Authorities**
