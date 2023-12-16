@@ -31,12 +31,14 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 
 ### Assumptions
 - Deployment on sepolia testnet (ethereum blockchain): Assumption of integrity of the blockchain data (in a real world adoption a private blockchain would be expedient)
+- Only 1 VAT rate per country
 - Government collaboration
 - Adoption by businesses
 - Scalability of the blockchain
 
 ### Open Issues
 - Exchange rate oracle CHF-EUR for precise currency swaps
+- Integration of different VAT rates per country
 
 ### Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
