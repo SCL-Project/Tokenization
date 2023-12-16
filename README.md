@@ -13,6 +13,14 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 #### [VATToken_DE](VAT%20fraud/VATToken_DE.sol): Contract to pay VAT in Germany
 #### [CrossBorderContract](VAT%20fraud/CrossBorderContract.sol): Contract for cross-border transactions and simple border crossings 
 
+### NatSpec Format
+- **[Solidity Documention](https://docs.soliditylang.org/en/latest/natspec-format.html)**
+- **@title:** Title of the contract
+- **@authors:** Authors of the contract
+- **@dev:** Explains to the end user all extra details (inlcudes @notice to safe space)
+- **@param:** documents a parameter
+- **@return:** documents the retunr variables of a contract's function
+
 ### Audience
 - **Tax Authorities**
 - **Governments**
