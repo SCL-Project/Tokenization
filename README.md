@@ -35,6 +35,7 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 - Government collaboration
 - Adoption by businesses
 - Scalability of the blockchain
+- No corrupt government entities
 
 ### Open Issues
 - Exchange rate oracle CHF-EUR for precise currency swaps
