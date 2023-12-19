@@ -1,26 +1,36 @@
+// ***************************************************************************************************************
 // SPDX-License-Identifier: MIT
+// @title VATTokenContract Germany
+// @authors Samuel Clauss & Dario Ganz
+// Smart Contracts Lab, University of Zurich
+// Created: December 15, 2023
+// ***************************************************************************************************************
+// Read the Whitepaper https://github.com/SCL-Project/Tokenization/blob/main/Whitepaper.md
+// ***************************************************************************************************************
 pragma solidity ^0.8.20;
 
-import "./RCT.sol";
+import "./Oracle.sol";
+import "./ReceiptTokenContract.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 
-/// @title VATTokenContract
-/// @author Samuel Clauss & Dario Ganz
 contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     address CrossBorderContract;
     ReceiptTokenContract public RCTContract;
     address private RCTAddress;
+    ExchangeRate_EUR_CHF public ExchangeOracle = ExchangeRate_EUR_CHF(0xa5e2C04c69010486700ae73B53420Bc3698c2d8b);
+
 
     /**
-     * @dev Constructor to initialize the contract of the VATToken
-     * @param initialOwner The address that will be granted the ownership of the contract.
-     *        in our case the government or to be specific the tax authority
+     * @dev Constructor to initialize the VATToken coontract of Germany. Sets the initialOwner of the contract
+     *      and initializes the address of the ReceiptTokenContract
+     * @param initialOwner The address to be granted ownership of the contract -> the German tax authority
+     * @param _RCTAddress The address of the ReceiptTokenContract
      */
     constructor(address initialOwner, address _RCTAddress)
-        ERC20("VAT_GER", "VCH")
+        ERC20("VAT_GER", "VDE")
         Ownable(initialOwner)
         ERC20Permit("VATToken")
     {
@@ -28,6 +38,20 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         RCTAddress = _RCTAddress;
     }
 
+    //------------------------------------------------Structs------------------------------------------------------
+
+    /**
+     * @dev Struct to store information of the ReceiptToken
+     * @param Type The type of token ('SellerToken' or 'BuyerToken')
+     * @param buyer, seller The parties involved in the transaction
+     * @param good The specific good or service that is sold
+     * @param country_of_sale The country of the selling, important for shippings across the border
+     * @param quantity The quantity of goods sold
+     * @param total_price The total price of the transaction
+     * @param VAT_amount The amount of VAT to be paid in the transaction
+     * @param TwinTokenID ID of the twin token
+     * @param isRefunded Indicates whether the VAT has been refunded or not
+     */
     struct Receipt {
         string Type;
         string buyer;
@@ -43,24 +67,37 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         bool isRefunded;
     }
 
+    //-------------------------------------------------Events-----------------------------------------------------
 
-    //----------------------------Events---------------------------------
-
-    event PaymentToBeReleased(address company, uint256 amount);
-
+    /**  
+     * @dev Emitted when a company gets a 'TokenCredit' or additional 'TokenCredit'
+     * @param company The company that accesses the function
+     * @param amount The amount of 'TokenCredit' given
+     */
     event TokenCreditReceived(address company, uint256 amount);
 
+    /**  
+     * @dev Emitted when a company withdraws VATTokens from their 'TokenCredit'
+     * @param company The company that accesses the function
+     * @param amount The amount to withdraw from the 'TokenCredit'
+     */
     event TokensBought(address company, uint256 amount);
 
+    /**  
+     * @dev Emitted when a company sells VATToken from their token balance back to the government
+     * @param company The company that accesses the function
+     * @param amount The amount to sold from the token balance
+     */
+    event PaymentToBeReleased(address company, uint256 amount);
 
-    //----------------------------Mappings-------------------------------
+    //-----------------------------------------------Mappings----------------------------------------------------
 
     /**
      * @dev Mapping to store the amount of TokenCredit
      */
     mapping (address => uint256) private TokenCredit;
 
-    //----------------------------Modifier-------------------------------
+    //-----------------------------------------------Modifier----------------------------------------------------
 
     /**
      * @dev Ensures transfers are only allowed between specific addresses and not between companies
@@ -73,15 +110,20 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     /**
-     * @dev Ensures only government entities can mint tokens
+     * @dev Ensures that some functions can only be accessed by the government instances
      */
     modifier onlyGovernment() {
         require(msg.sender == address(this) || msg.sender == CrossBorderContract || msg.sender == RCTAddress, "You are not allowed to mint VAT_GER Tokens!");
         _;
     }
 
-    //----------------------------Functions-------------------------------
+    //---------------------------------------------HelperFunctions--------------------------------------------------
 
+    /**
+     * @dev Returns the token credit amount of the caller. Provides a view function to check the 
+     *      `TokenCredit` balance associated with the caller's address
+     * @return The amount of token credit available for the calling address
+     */
     function checkTokenCredit() public view returns(uint256) {
         return TokenCredit[msg.sender];
     }
@@ -96,21 +138,31 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     /**
-     * @dev Set or update the token credit for an address
+     * @dev Sets the address of the CrossBorderContract
+     * @param _address The address of the CrossBorderContract
+     */
+    function setCBCAddress(address _address) public onlyOwner {
+        CrossBorderContract = _address;
+    }
+
+    //------------------------------------------------Funcitons-----------------------------------------------------
+
+    /**
+     * @dev Set or update the token credit for an address. Only callable by the government instances
      * @param _address The address to update
      * @param _amount The credit amount to set or add
      */
-    function setTokenCredit(address _address, uint256 _amount) public onlyOwner {
+    function setTokenCredit(address _address, uint256 _amount) public onlyGovernment {
         if (checkIfKeyExists(_address)) {
             TokenCredit[_address] += _amount;
         } else {
-        TokenCredit[_address] = _amount;
+            TokenCredit[_address] = _amount;
         }
         emit TokenCreditReceived(_address, _amount);
     } 
 
     /**
-     * @dev Mints tokens to a specified address
+     * @dev Mints tokens to a specified address. Only callable by the government instances
      * @param to The address to which the tokens are minted to
      * @param amount The amount of tokens to be minted
      */
@@ -119,17 +171,9 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     /**
-     * @dev Sets the address of the CrossBorderContract
-     * @param _address The address of the CrossBorderContract
-     */
-    function setCBCAddress(address _address) public onlyOwner {
-        CrossBorderContract = _address;
-    }
-
-    /**
      * @dev Transfers a specified amount of tokens from the contract to a specific address. 
      *      If the contract doesn't have enough tokens, the required amount gets minted.
-     *      This function is restricted to the contract owner
+     *      This function is restricted to government instances
      * @param _to The address to which the tokens will be transferred or minted
      * @param _amount The amount of tokens to be transferred or minted
      */
@@ -162,6 +206,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param value The amount of tokens to transfer
      * @return bool Returns true if the transfer is successful
      */
+     
     function transferFrom(address _from, address _to, uint256 value) public override transferRestriction(_from, _to) returns(bool) {
     }
 
@@ -181,14 +226,16 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     /**
-     * @dev Refunds taxes for a specific token ID by transferring the appropriate amount of VAT back to the owner of the ReceiptToken.
-     *      The function calculates the refund amount based on the tax and percentages of used products associated with the token
+     * @dev Refunds taxes for a specific token ID by transferring the appropriate amount of VAT back to the owner
+     *      of the ReceiptToken. The function calculates the refund amount based on the tax and percentages of used 
+     *      products associated with the token. It supports refunds for tokens from Germany and Switzerland
      * @param _tokenID The ID of the token for which the tax refund is requested
      */
     function refundTaxes(uint64 _tokenID) external {
         require(
+            keccak256(abi.encodePacked(RCTContract.getNFTData(_tokenID).current_country)) == keccak256(abi.encodePacked("Switzerland")) ||
             keccak256(abi.encodePacked(RCTContract.getNFTData(_tokenID).current_country)) == keccak256(abi.encodePacked("Germany")),
-            "This contract can only refund Tokens from Germany!"
+            "This contract can only refund Tokens from Switzerland or Germany!"
             );
         require(RCTContract.ownerOf(_tokenID) == msg.sender, "You are not the owner of this token!");
         bool isRefunded = RCTContract.getNFTData(_tokenID).isRefunded;
@@ -200,6 +247,11 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
             uint40 tax = RCTContract.getNFTData(IDs[i]).VAT_amount;
             refundAmount += tax * percentages[i] / 100;
         }
+
+        if (keccak256(abi.encodePacked(RCTContract.getNFTData(_tokenID).current_country)) == keccak256(abi.encodePacked("Switzerland"))) {
+            refundAmount = refundAmount / ExchangeOracle.getExchangeRate() * 1000;
+        }
+
         if (refundAmount != 0) {
             transferGovernment(msg.sender, refundAmount);
         }
@@ -207,7 +259,9 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     /**
-     * @dev Allows users to buy VAT tokens by withdrawing from their token credit, if the token credit is 0, the TokenCredit is deleted
+     * @dev Allows users to buy VAT tokens by withdrawing from their token credit, if the token credit is 0, 
+     *      the TokenCredit is deleted. The function can only be accessed, when the 'TokenCredit' is higher
+     *      than the amount used as input for the function
      * @param _amount The amount of VAT tokens to buy from the TokenCredit
      */
     function BuyVATTokens(uint40 _amount) public {
@@ -220,10 +274,15 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         emit TokensBought(msg.sender, _amount);
     }
 
+    /**
+     * @dev Allows users to sell VAT tokens by withdrawing from their token balance. If the token balance is equal or 
+     *      higher than the balance. After successful compliance the government transfers CHF back to the companies
+     *      bank account
+     * @param _amount The amount of VAT tokens to sell from the balance
+     */
     function SellVATTokens(uint40 _amount) public {
         require(balanceOf(msg.sender) >= _amount, "You have not enough VAT_GER Tokens!");
         _transfer(msg.sender, address(this), _amount);
         emit PaymentToBeReleased(msg.sender, _amount);
     }
 }
-

@@ -99,11 +99,6 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     mapping (string => uint16) public VATRates;
 
     /**
-     * @dev Mapping to track whether a company is locked
-     */
-    mapping (address => bool) private lockedAddresses;
-
-    /**
      * @dev Mapping to store information about the used percentage of the products used for a good.
      *      Important for the refundTaxes function of the VATTokenContract
      */
@@ -114,7 +109,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
 
 
     //----------------------------Events---------------------------------
-
+    
     event SellerTokenCreated(address company, uint256 tokenID);
 
     event BuyerTokenCreated(address company, uint256 tokenID);
@@ -122,7 +117,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     event EndOfChain(uint256 tokenID);
 
     event CurrencyNotRegistered(string country);
-
+    
 
     //----------------------------Modifier-------------------------------
 
@@ -130,7 +125,12 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @dev Ensures that the function can only be called by registered companies that are not locked or the owner himself
      */
     modifier onlyCompanies() {
-        require(Companies[msg.sender].isRegistered, "Only registered Companies can call this Function!");
+        require(Companies[msg.sender].isRegistered, "Only registered Companies!");
+        _;
+    }
+
+    modifier onlyGovernment() {
+        require(msg.sender == address(this) || msg.sender == address(VAT_DE_Contract) || msg.sender == address(VAT_CH_Contract), "Only Government Authorities!");
         _;
     }
 
@@ -149,8 +149,8 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     function setCurrency(string memory _country, string memory _currency) public onlyOwner {
         currency[_country] = _currency;
     }
-
-    function getNFTData(uint64 _tokenId) public view returns(Receipt memory) {
+    
+    function getNFTData(uint64 _tokenId) public onlyGovernment view returns(Receipt memory) {
         return NFTData[_tokenId];
     }
 
@@ -159,6 +159,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
                 Companies[_address].name,
                 Companies[_address].UID);
     }
+
 
     /**
      * @dev Adds a used product to a specific token. This function ensures that the caller is the owner of both the 'SellerToken' and the 'Buyertoken'. 
@@ -174,7 +175,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         require(
             keccak256(abi.encodePacked(NFTData[_tokenID].Type)) == keccak256(abi.encodePacked("SellerToken")) &&
             keccak256(abi.encodePacked(NFTData[_productTokenID].Type)) == keccak256(abi.encodePacked("BuyerToken")),
-            "The Tokens do not have the correct Type!"
+            "Not correct Token Type!"
             ); 
 
         UsedProduct memory newusedProduct = UsedProduct(
@@ -212,7 +213,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @return uint256[] An array of token IDs of the used products
      * @return uint8[] An array of the usage percentages corresponding to each used product token
      */
-    function getUsedProducts(uint64 _tokenID) public view returns(uint64[] memory, uint8[] memory) {
+    function getUsedProducts(uint64 _tokenID) public onlyGovernment view returns(uint64[] memory, uint8[] memory) {
         uint64[] memory tokenIDs = new uint64[](UsedProducts[_tokenID].length);
         uint8[] memory percentages = new uint8[](UsedProducts[_tokenID].length);
         for (uint24 i = 0; i < UsedProducts[_tokenID].length; i++) {
@@ -229,12 +230,12 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @param _tokenID The ID of the 'SellerToken' to prove that the good has not been consumed but processed and sold
      */
     //MODIFIER MUST BE ADDED IN THE FUTURE
-    function changeRefundStatus(uint64 _tokenID) public onlyOwner {
+    function changeRefundStatus(uint64 _tokenID) public onlyGovernment {
         NFTData[_tokenID].isRefunded = true;
     }
 
     //MODIFIER MUST BE ADDED IN THE FUTURE
-    function changeCurrentCountry(uint64 _tokenID, string memory _country) external onlyOwner {
+    function changeCurrentCountry(uint64 _tokenID, string memory _country) public onlyGovernment {
         NFTData[_tokenID].current_country = _country;
     }
 
@@ -262,7 +263,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @param _UID The unique identifier of the company
      */
     function RegisterCompany(address _address, string memory _name, string memory _UID) public onlyOwner {
-        require(!Companies[_address].isRegistered, "This company is already registered!");
+        require(!Companies[_address].isRegistered, "Company already registered!");
         Company memory newCompany = Company(true, _name, _UID);
         Companies[_address] = newCompany;
     }
@@ -272,7 +273,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @param _address Address of the company to be deleted
      */
     function DeleteCompany(address _address) public onlyOwner {
-        require(Companies[_address].isRegistered, "This company is not registered!");
+        require(Companies[_address].isRegistered, "Company already registered!");
         delete Companies[_address];
     }
 
@@ -282,7 +283,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @param _name Name of the company to be changed
      */
     function ChangeCompanyName(address _address, string memory _name) public onlyOwner {
-        require(Companies[_address].isRegistered, "This company is not registered!");
+        require(Companies[_address].isRegistered, "Company not registered!");
         Companies[_address].name = _name;
     }
 
@@ -292,7 +293,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @param _UID The unique identifier of the company to be changed
      */
     function ChangeCompanyUID(address _address, string memory _UID) public onlyOwner {
-        require(Companies[_address].isRegistered, "This company is not registered!");
+        require(Companies[_address].isRegistered, "Company not registered!");
         Companies[_address].name = _UID;
     }
 
@@ -323,8 +324,6 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @param _total_price The total price of the transaction
      * @param _buyerAddr The Address of the buyer
      */
-
-     
     function createReceiptToken(
         string memory _buyer,
         string memory _seller,
@@ -338,7 +337,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
 
         if (bytes(currency[_country_of_sale]).length == 0) {
             emit CurrencyNotRegistered(_country_of_sale);
-            revert("The currency of this country has not been registered yet!");
+            revert("Currency not registered!");
         } 
 
         bool x;
@@ -348,12 +347,10 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         } else if (keccak256(abi.encodePacked(_country_of_sale)) == keccak256(abi.encodePacked("Germany"))) {
             x = VAT_DE_Contract.payTaxes(msg.sender, _VAT_amount);
         } else {
-            revert("The country is not part of the system!");
+            revert("Country not part of the system!");
         }
 
         require(x, "To create the ReceiptToken you have to pay the VAT!");
-        require(lockedAddresses[msg.sender] != true, "The seller is locked and you can't create ReceiptTokens!");
-        require(lockedAddresses[_buyerAddr] != true, "The buyer is locked and you can't create ReceiptTokens!");
 
         uint64 tokenID1 = safeMint(msg.sender);
 
@@ -373,89 +370,33 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         );
         NFTData[tokenID1] = newReceipt1;
 
-        uint64 tokenID2 = safeMint(_buyerAddr);
-
-        Receipt memory newReceipt2 = Receipt(
-            "BuyerToken",
-            _buyer, 
-            _seller, 
-            _good, 
-            currency[_country_of_sale],
-            _country_of_sale, 
-            _country_of_sale, 
-            _quantity, 
-            _total_price, 
-            _VAT_amount,
-            tokenID1,
-            true
-        );
-        NFTData[tokenID2] = newReceipt2;
-        NFTData[tokenID1].TwinTokenID = tokenID2;
-
         emit SellerTokenCreated(msg.sender, tokenID1);
-        emit BuyerTokenCreated(_buyerAddr, tokenID2);
-    }
 
+        if (_buyerAddr != address(0)) {
 
-    /**
-     * @dev Creates receipt tokens for a transaction involving only a seller. This function mints one token:
-     *      one representing the seller's side of the transaction and another for the buyer's side ('SellerToken and BuyerToken').
-     *      The function checks that neither the buyer nor the seller is locked. The VAT is calculated and has to be paid before 
-     *      the tokens can be minted. Therefore VAT-fraud can be prevented
-     * @param _buyer The Adress of the buyer in the transaction
-     * @param _seller The Adress of the seller in the transaction
-     * @param _good The description of the good or service being transacted
-     * @param _country_of_sale The country in which the sale takes place
-     * @param _quantity The quantity of the good being transacted
-     * @param _total_price The total price of the transaction
-     */
-    function createReceiptSellerToken(
-        string memory _buyer,
-        string memory _seller,
-        string memory _good,
-        string memory _country_of_sale,
-        uint32 _quantity,
-        uint40 _total_price
-        ) public onlyCompanies {
-        uint40 _VAT_amount = _total_price * VATRates[_country_of_sale] / 1000;
+            uint64 tokenID2 = safeMint(_buyerAddr);
 
-        if (bytes(currency[_country_of_sale]).length == 0) {
-            emit CurrencyNotRegistered(_country_of_sale);
-            revert("The currency of this country has not been registered yet!");
-        }
+            Receipt memory newReceipt2 = Receipt(
+                "BuyerToken",
+                _buyer, 
+                _seller, 
+                _good, 
+                currency[_country_of_sale],
+                _country_of_sale, 
+                _country_of_sale, 
+                _quantity, 
+                _total_price, 
+                _VAT_amount,
+                tokenID1,
+                true
+            );
+            NFTData[tokenID2] = newReceipt2;
+            NFTData[tokenID1].TwinTokenID = tokenID2;
 
-        bool x;
-        if (keccak256(abi.encodePacked(_country_of_sale)) == keccak256(abi.encodePacked("Switzerland"))) {
-            x = VAT_CH_Contract.payTaxes(msg.sender, _VAT_amount);
-        } else if (keccak256(abi.encodePacked(_country_of_sale)) == keccak256(abi.encodePacked("Germany"))) {
-            x = VAT_DE_Contract.payTaxes(msg.sender, _VAT_amount);
+            emit BuyerTokenCreated(_buyerAddr, tokenID2);
+
         } else {
-            revert("The country is not part of the system!");
+            emit EndOfChain(tokenID1);
         }
-
-        
-        require(x, "To create the ReceiptToken you have to pay the VAT!");
-        require(lockedAddresses[msg.sender] != true, "The seller is locked and you can't create ReceiptTokens!");
-
-        uint64 tokenID1 = safeMint(msg.sender);
-
-        Receipt memory newReceipt1 = Receipt(
-            "SellerToken",
-            _buyer, 
-            _seller, 
-            _good, 
-            currency[_country_of_sale],
-            _country_of_sale,
-            _country_of_sale,  
-            _quantity, 
-            _total_price, 
-            _VAT_amount,
-            0,
-            false
-        );
-        NFTData[tokenID1] = newReceipt1;
-
-        emit SellerTokenCreated(msg.sender, tokenID1);
-        emit EndOfChain(tokenID1);
     }
 }
