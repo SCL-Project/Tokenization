@@ -46,7 +46,7 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param buyer The buyer of a good involved in the transaction
      * @param seller The seller of a good involved in the transaction
      * @param good The specific good or service that is sold
-     * @param currency 
+     * @param currency The currency of the transaction
      * @param country_of_sale The country of the selling, important for shippings across the border
      * @param current_country The country where the good is located at the moment
      * @param quantity The quantity of goods sold

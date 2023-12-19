@@ -40,9 +40,12 @@ contract CrossBorderContract {
     /**
      * @dev Struct to store information of the ReceiptToken
      * @param Type The type of token ('SellerToken' or 'BuyerToken')
-     * @param buyer, seller The parties involved in the transaction
+     * @param buyer The buyer of a good involved in the transaction
+     * @param seller The seller of a good involved in the transaction
      * @param good The specific good or service that is sold
+     * @param currency The currency of the transaction
      * @param country_of_sale The country of the selling, important for shippings across the border
+     * @param current_country The country where the good is located at the moment
      * @param quantity The quantity of goods sold
      * @param total_price The total price of the transaction
      * @param VAT_amount The amount of VAT to be paid in the transaction
@@ -185,7 +188,7 @@ contract CrossBorderContract {
      *      that the token represents a good that can be legally exported. The function makes sure that
      *      the good is in the same country as it's exported from and has not already been sold. It adjusts 
      *      the VAT payments according to the VAT rate of the destination country if the price is higher than
-     *      300 CHF or EUR
+     *      300 CHF or EUR. If the price is lower than 300 just the current country of the good is exchanged
      * @param _tokenID The ID of the token representing the good being exported
      * @param _from The country from which the good is being exported
      * @param _to The country to which the good is being exported
