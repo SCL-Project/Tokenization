@@ -1,4 +1,12 @@
+// ***************************************************************************************************************
 // SPDX-License-Identifier: MIT
+/// @title ReceiptTokenContract
+/// @author Samuel Clauss & Dario Ganz
+// Smart Contracts Lab, University of Zurich
+// Created: December 15, 2023
+// ***************************************************************************************************************
+// Read the Whitepaper https://github.com/SCL-Project/Tokenization/blob/main/Whitepaper.md
+// ***************************************************************************************************************
 pragma solidity ^0.8.20;
 
 import "./VATToken_DE.sol";
@@ -7,9 +15,6 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-
-/// @title ReceiptTokenContract
-/// @author Samuel Clauss & Dario Ganz
 contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     uint64 private _nextTokenId = 1;
     VATToken_CH public VAT_CH_Contract;
@@ -27,14 +32,17 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         {}
     
 
-    //----------------------------Structs-------------------------------
+    //------------------------------------------------Structs-----------------------------------------------------
 
     /**
      * @dev Struct to store information of the ReceiptToken
      * @param Type The type of token ('SellerToken' or 'BuyerToken')
-     * @param buyer, seller The parties involved in the transaction
+     * @param buyer The buyer of a good involved in the transaction
+     * @param seller The seller of a good involved in the transaction
      * @param good The specific good or service that is sold
+     * @param currency 
      * @param country_of_sale The country of the selling, important for shippings across the border
+     * @param current_country The country where the good is located at the moment
      * @param quantity The quantity of goods sold
      * @param total_price The total price of the transaction
      * @param VAT_amount The amount of VAT to be paid in the transaction
@@ -79,9 +87,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         uint8 UsagePercentage;
     }
 
-
-    //----------------------------Mappings-------------------------------
-
+    //------------------------------------------------Mappings----------------------------------------------------
 
     /**
      * @dev Mapping to store data of Receipt associated with a tokenID
@@ -107,8 +113,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
 
     mapping (string => string) private currency;
 
-
-    //----------------------------Events---------------------------------
+    //------------------------------------------------Events------------------------------------------------------
     
     event SellerTokenCreated(address company, uint256 tokenID);
 
@@ -118,8 +123,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
 
     event CurrencyNotRegistered(string country);
     
-
-    //----------------------------Modifier-------------------------------
+    //------------------------------------------------Modifier----------------------------------------------------
 
     /**
      * @dev Ensures that the function can only be called by registered companies that are not locked or the owner himself
@@ -129,12 +133,15 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         _;
     }
 
+    /**
+     * @dev Ensures that the function can only be called by Swiss and German government entities
+     */
     modifier onlyGovernment() {
         require(msg.sender == address(this) || msg.sender == address(VAT_DE_Contract) || msg.sender == address(VAT_CH_Contract), "Only Government Authorities!");
         _;
     }
 
-    //----------------------------HelperFunctions-------------------------
+    //--------------------------------------------HelperFunctions-------------------------------------------------
 
     function setVAT_DE_Contract(address _address) public onlyOwner {
         VAT_DE_Contract = VATToken_DE(_address);
@@ -160,7 +167,25 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
                 Companies[_address].UID);
     }
 
+    /**
+     * @dev The government (OnlyOwner) can devine a VAT-rate for each country (presumption of only 1 unified rate per country)
+     * @param _country The country to set the VAT-rate for
+     * @param VATRate The VAT-rate to be defined by the government according to the law
+     */
+    function setVatRate(string memory _country, uint16 VATRate) public onlyOwner {
+        VATRates[_country] = VATRate;
+    }
 
+    /**
+     * @dev The government (OnlyOwner) can delete wrong or outdated VAT-rates
+     * @param _country The country to delete the VAT-rate for
+     */
+    function deleteVATRate(string memory _country) public onlyOwner {
+        delete VATRates[_country];
+    }
+
+    //-----------------------------------------------Functions----------------------------------------------------
+    
     /**
      * @dev Adds a used product to a specific token. This function ensures that the caller is the owner of both the 'SellerToken' and the 'Buyertoken'. 
      *      It also checks that the tokens have the correct types ('SellerToken' and 'BuyerToken') for the operation.
@@ -240,23 +265,6 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev The government (OnlyOwner) can devine a VAT-rate for each country (presumption of only 1 unified rate per country)
-     * @param _country The country to set the VAT-rate for
-     * @param VATRate The VAT-rate to be defined by the government according to the law
-     */
-    function setVatRate(string memory _country, uint16 VATRate) public onlyOwner {
-        VATRates[_country] = VATRate;
-    }
-
-    /**
-     * @dev The government (OnlyOwner) can delete wrong or outdated VAT-rates
-     * @param _country The country to delete the VAT-rate for
-     */
-    function deleteVATRate(string memory _country) public onlyOwner {
-        delete VATRates[_country];
-    }
-
-    /**
      * @dev Companies can be registered by the government (onlyOwner) and are stored in the Companies mapping
      * @param _address Address of the company to be registered
      * @param _name Name of the company
@@ -316,8 +324,8 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      *      one representing the seller's side of the transaction and another for the buyer's side ('SellerToken and BuyerToken').
      *      The function checks that neither the buyer nor the seller is locked. The VAT is calculated and has to be paid before 
      *      the tokens can be minted. Therefore VAT-fraud can be prevented
-     * @param _buyer The Adress of the buyer in the transaction
-     * @param _seller The Adress of the seller in the transaction
+     * @param _buyer The Adress of the buyer of the transaction
+     * @param _seller The Adress of the seller of the transaction
      * @param _good The description of the good or service being transacted
      * @param _country_of_sale The country in which the sale takes place
      * @param _quantity The quantity of the good being transacted
