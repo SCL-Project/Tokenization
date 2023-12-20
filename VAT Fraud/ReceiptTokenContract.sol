@@ -3,7 +3,7 @@
 /// @title ReceiptTokenContract
 /// @author Samuel Clauss & Dario Ganz
 // Smart Contracts Lab, University of Zurich
-// Created: December 20, 2023
+// Created: December 15, 2023
 // ***************************************************************************************************************
 // Read the Whitepaper https://github.com/SCL-Project/Tokenization/blob/main/Whitepaper.md
 // ***************************************************************************************************************
@@ -22,7 +22,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     VATToken_DE public VAT_DE_Contract;
     bool VATToken_DE_set;
     bool VATToken_CH_set;
-    Oracle public OracleContract = Oracle(0xb963EE3D7f792bAc3F8DcE6FAAE555f1E5FBDCb6);
+    Oracle public OracleContract = Oracle(0x4901cf9AC5e0Df7dfACd9615A934F696761E9437);
     address initialOwner;
 
     /**
@@ -137,6 +137,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         _;
     }
 
+
     //--------------------------------------------HelperFunctions-------------------------------------------------
 
     function setVAT_DE_Contract(address _address) public onlyOwner {
@@ -229,7 +230,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @dev Change the refund status in the data of the token to prevent double refundings
      * @param _tokenID The ID of the 'SellerToken' to prove that the good has not been consumed but processed and sold
      */
-    function changeRefundStatus(uint56 _tokenID) public {
+    function changeRefundStatus(uint56 _tokenID) onlyGovernment public {
         NFTData[_tokenID].isRefunded = true;
     }
 

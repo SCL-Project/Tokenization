@@ -18,7 +18,7 @@ contract CrossBorderContract {
     ReceiptTokenContract public RCTContract;
     VATToken_CH public VAT_CH_Contract;
     VATToken_DE public VAT_DE_Contract;  
-    Oracle public OracleContract = Oracle(0xb963EE3D7f792bAc3F8DcE6FAAE555f1E5FBDCb6);  
+    Oracle public OracleContract = Oracle(0x4901cf9AC5e0Df7dfACd9615A934F696761E9437);  
     address[] private owners;
 
     /**

@@ -21,8 +21,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     address initialOwner;
     address private RCTAddress;
     ReceiptTokenContract public RCTContract;
-    Oracle public OracleContract = Oracle(0xb963EE3D7f792bAc3F8DcE6FAAE555f1E5FBDCb6);
-
+    Oracle public OracleContract = Oracle(0x4901cf9AC5e0Df7dfACd9615A934F696761E9437);
 
     /**
      * @dev Constructor to initialize the VATToken coontract of Germany. Sets the initialOwner of the contract
@@ -253,7 +252,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         uint40 refundAmount;
         (uint56[] memory IDs, uint8[] memory percentages) = RCTContract.getUsedProducts(_tokenID);
         for (uint24 i = 0; i < IDs.length; i++) {
-            uint40 tax = RCTContract.getNFTData(IDs[i]).total_price * OracleContract.getVATRate(RCTContract.getNFTData(IDs[i]).current_country);
+            uint40 tax = RCTContract.getNFTData(IDs[i]).total_price * OracleContract.getVATRate(RCTContract.getNFTData(IDs[i]).current_country) / 1000;
             refundAmount += tax * percentages[i] / 100;
             if (keccak256(abi.encodePacked(RCTContract.getNFTData(IDs[i]).country_of_sale)) == keccak256(abi.encodePacked("Switzerland"))) {
                 refundAmount = refundAmount / OracleContract.getExchangeRate() * 1000;
