@@ -3,12 +3,13 @@
 // @title CrossBorderContract
 // @authors Samuel Clauss & Dario Ganz
 // Smart Contracts Lab, University of Zurich
-// Created: December 15, 2023
+// Created: December 20, 2023
 // ***************************************************************************************************************
 // Read the Whitepaper https://github.com/SCL-Project/Tokenization/blob/main/Whitepaper.md
 // ***************************************************************************************************************
 pragma solidity ^0.8.20;
 
+import "./Oracle.sol";
 import "./ReceiptTokenContract.sol";
 import "./VATToken_DE.sol";
 import "./VATToken_CH.sol";
@@ -16,21 +17,21 @@ import "./VATToken_CH.sol";
 contract CrossBorderContract {
     ReceiptTokenContract public RCTContract;
     VATToken_CH public VAT_CH_Contract;
-    VATToken_DE public VAT_DE_Contract;    
+    VATToken_DE public VAT_DE_Contract;  
+    Oracle public OracleContract = Oracle(0xb963EE3D7f792bAc3F8DcE6FAAE555f1E5FBDCb6);  
     address[] private owners;
 
     /**
      * @dev Constructor to initialize the CrossBorderContract
      Sets the initial owners of the contract and initializes contracts for VAT tokens and receipt tokens
-     * @param _owners An array of addresses to be granted ownership of the contract -> government entities
      * @param _RCTAddress The address of the ReceiptTokenContract, which manages receipt tokens
      * @param VAT_CH_Address The address of the VATToken contract for Switzerland (CH)
      * @param VAT_DE_Address The address of the VATToken contract for Germany (DE)
      */
-    constructor(address[] memory _owners, address _RCTAddress, address VAT_CH_Address, address VAT_DE_Address) {
-        for (uint24 i = 0; i < _owners.length; i++) {
-            isOwner[_owners[i]] = true;
-            owners.push(_owners[i]);
+    constructor(address _initialOwner, address _RCTAddress, address VAT_CH_Address, address VAT_DE_Address) {
+        owners = [_initialOwner, _RCTAddress, VAT_CH_Address, VAT_DE_Address];
+        for (uint24 i = 0; i < owners.length; i++) {
+            isOwner[owners[i]] = true;
         }
         RCTContract = ReceiptTokenContract(_RCTAddress);
         VAT_CH_Contract = VATToken_CH(VAT_CH_Address);
@@ -63,7 +64,7 @@ contract CrossBorderContract {
         uint32 quantity;
         uint40 total_price;
         uint40 VAT_amount;
-        uint64 TwinTokenID;
+        uint56 TwinTokenID;
         bool isRefunded;
     }
 
@@ -75,14 +76,9 @@ contract CrossBorderContract {
      * @param to The country to which the item is being sent
      * @param tokenID The unique identifier of the item
      */
-    event CrossedBorder(string from, string to, uint64 tokenID);
+    event CrossedBorder(string from, string to, uint56 tokenID);
 
     //------------------------------------------------Mappings----------------------------------------------------
-
-    /**
-     * @dev Mapping to store VAT-rates associated with the respective country
-     */
-    mapping (string => uint16) public VATRates; 
 
     /**
      * @dev Indicates whether an address is an owner or not (true or false). This mapping is used for
@@ -162,22 +158,6 @@ contract CrossBorderContract {
         return owners;
     }
 
-    /**
-     * @dev The government (onlyOwner) can devine a VAT rate for each country (presumption of only 1 unified rate per country)
-     * @param _country The country to set the VAT rate for
-     * @param _rate The VAT rate to be defined by the governments according to the national law
-     */
-    function addVATRate(string memory _country, uint16 _rate) public onlyOwner {
-        VATRates[_country] = _rate;
-    }
-
-    /**
-     * @dev The government (OnlyOwner) can delete wrong or outdated VAT rates
-     * @param _country The country to delete the VAT-rate for
-     */
-    function deleteVATRate(string memory _country) public onlyOwner {
-        delete VATRates[_country];
-    }
 
 //------------------------------------------------Functions--------------------------------------------------
 
@@ -193,7 +173,7 @@ contract CrossBorderContract {
      * @param _from The country from which the good is being exported
      * @param _to The country to which the good is being exported
      */
-    function CrossBorder(uint64 _tokenID, string memory _from, string memory _to) external onlyRegisteredCompanies {
+    function CrossBorder(uint56 _tokenID, string memory _from, string memory _to) external onlyRegisteredCompanies {
         string memory Type = RCTContract.getNFTData(_tokenID).Type;
         string memory Country = RCTContract.getNFTData(_tokenID).country_of_sale;
         string memory good = RCTContract.getNFTData(_tokenID).good;
@@ -202,12 +182,12 @@ contract CrossBorderContract {
 
         require(RCTContract.ownerOf(_tokenID) == msg.sender, "You are not the owner of this token!");
         require(keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked(_from)), "The product must be in the same country you want to export from!");
-        require(VATRates[_from] != 0, "The country you want to export your product from is not known!");
-        require(VATRates[_to] != 0, "The country you want to export your product to is not known!");
+        require(OracleContract.getVATRate(_from) != 0, "The country you want to export your product from is not known!");
+        require(OracleContract.getVATRate(_to) != 0, "The country you want to export your product to is not known!");
         require(keccak256(abi.encodePacked(Type)) == keccak256(abi.encodePacked("BuyerToken")), "You can't export a product you have already sold!");
         require(!ForbiddenGoods[good], "It is forbidden to export or import this good!");
 
-        uint40 taxes_payable = price * VATRates[_to] / 1000;
+        uint40 taxes_payable = price * OracleContract.getVATRate(_to) / 1000;
         int40 temp = int40(VAT_amount) - int40(taxes_payable);
         uint40 difference;
 

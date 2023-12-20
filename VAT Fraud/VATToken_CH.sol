@@ -3,7 +3,7 @@
 // @title VATTokenContract Switzerland
 // @authors Samuel Clauss & Dario Ganz
 // Smart Contracts Lab, University of Zurich
-// Created: December 15, 2023
+// Created: December 20, 2023
 // ***************************************************************************************************************
 // Read the Whitepaper https://github.com/SCL-Project/Tokenization/blob/main/Whitepaper.md
 // ***************************************************************************************************************
@@ -18,24 +18,30 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 
 contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     address CrossBorderContract;
-    ReceiptTokenContract public RCTContract;
+    address initialOwner;
     address private RCTAddress;
-    ExchangeRate_EUR_CHF public ExchangeOracle = ExchangeRate_EUR_CHF(0xa5e2C04c69010486700ae73B53420Bc3698c2d8b);
+    ReceiptTokenContract public RCTContract;
+    Oracle public OracleContract = Oracle(0xb963EE3D7f792bAc3F8DcE6FAAE555f1E5FBDCb6);
 
 
     /**
      * @dev Constructor to initialize the VATToken coontract of Switzerland. Sets the initialOwner of the contract
      *      and initializes the address of the ReceiptTokenContract
-     * @param initialOwner The address to be granted ownership of the contract -> the Swiss tax authority
+     * @param _initialOwner The address to be granted ownership of the contract -> the Swiss tax authority
      * @param _RCTAddress The address of the ReceiptTokenContract
      */
-    constructor(address initialOwner, address _RCTAddress)
+    constructor(address _initialOwner, address _RCTAddress)
         ERC20("VAT_CH", "VCH")
-        Ownable(initialOwner)
+        Ownable(_initialOwner)
         ERC20Permit("VATToken")
     {
         RCTContract = ReceiptTokenContract(_RCTAddress);
         RCTAddress = _RCTAddress;
+        initialOwner = _initialOwner;
+    }
+    
+    function decimals() public pure override returns (uint8) {
+        return 0;
     }
 
     //------------------------------------------------Structs------------------------------------------------------
@@ -66,7 +72,7 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         uint32 quantity;
         uint40 total_price;
         uint40 VAT_amount;
-        uint64 TwinTokenID;
+        uint56 TwinTokenID;
         bool isRefunded;
     }
 
@@ -116,7 +122,7 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @dev Ensures that some functions can only be accessed by the government instances
      */
     modifier onlyGovernment() {
-        require(msg.sender == address(this) || msg.sender == CrossBorderContract || msg.sender == RCTAddress, "You are not allowed to mint VAT_CH Tokens!");
+        require(msg.sender == initialOwner || msg.sender == address(this) || msg.sender == CrossBorderContract || msg.sender == RCTAddress, "Only Government!");
         _;
     }
 
@@ -219,7 +225,7 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param _amount The amount of tokens to be paid
      * @return bool Returns true if the tax payment is successful, otherwise false
      */
-    function payTaxes(address _from, uint40 _amount) external onlyGovernment returns(bool) {
+    function payTaxes(address _from, uint40 _amount) public onlyGovernment returns(bool) {
         if (balanceOf(_from) >= _amount) {
             _transfer(_from, address(this), _amount);
             return true;
@@ -233,7 +239,7 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      *      products associated with the token. It supports refunds for tokens from Switzerland and Germany
      * @param _tokenID The ID of the token for which the tax refund is requested
      */
-    function refundTaxes(uint64 _tokenID) external {
+    function refundTaxes(uint56 _tokenID) external {
         require(
             keccak256(abi.encodePacked(RCTContract.getNFTData(_tokenID).current_country)) == keccak256(abi.encodePacked("Switzerland")) ||
             keccak256(abi.encodePacked(RCTContract.getNFTData(_tokenID).current_country)) == keccak256(abi.encodePacked("Germany")),
@@ -244,18 +250,17 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         require(isRefunded == false, "This Token has already been refunded or is a BuyerToken!");    
         
         uint40 refundAmount;
-        (uint64[] memory IDs, uint8[] memory percentages) = RCTContract.getUsedProducts(_tokenID);
+        (uint56[] memory IDs, uint8[] memory percentages) = RCTContract.getUsedProducts(_tokenID);
         for (uint24 i = 0; i < IDs.length; i++) {
-            uint40 tax = RCTContract.getNFTData(IDs[i]).VAT_amount;
+            uint40 tax = RCTContract.getNFTData(IDs[i]).total_price * OracleContract.getVATRate(RCTContract.getNFTData(IDs[i]).current_country);
             refundAmount += tax * percentages[i] / 100;
+            if (keccak256(abi.encodePacked(RCTContract.getNFTData(IDs[i]).country_of_sale)) == keccak256(abi.encodePacked("Germany"))) {
+                refundAmount = refundAmount * OracleContract.getExchangeRate() / 1000;
+            }
         }
-        if (keccak256(abi.encodePacked(RCTContract.getNFTData(_tokenID).current_country)) == keccak256(abi.encodePacked("Germany"))) {
-            refundAmount = refundAmount * ExchangeOracle.getExchangeRate() / 1000;
-        }
-
-
+        
         if (refundAmount != 0) {
-            transferGovernment(msg.sender, refundAmount);
+            this.transferGovernment(msg.sender, refundAmount);
             RCTContract.changeRefundStatus(_tokenID);
         }
     }
@@ -268,7 +273,7 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      */
     function BuyVATTokens(uint40 _amount) public {
         require(TokenCredit[msg.sender] >= _amount, "Your balance is not sufficient!");
-        mint(msg.sender, _amount);
+        this.mint(msg.sender, _amount);
         TokenCredit[msg.sender] -= _amount;
         if (TokenCredit[msg.sender] == 0) {
             delete TokenCredit[msg.sender];
