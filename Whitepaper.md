@@ -68,16 +68,26 @@ To interact with the `Oracle`, `ReceiptTokenContract`, `CrossBorderContract`, `V
    - Select the contract you wish to deploy from the 'Contract' dropdown.
    - Enter any necessary constructor parameters
    - Click 'Deploy' to deploy each contract. 
-   - After deployment, the contracts will appear in the 'Deployed Contracts' section at the bottom of the panel.  
-4.1  **Order of Deployment**:
-     1. ReceiptTokenContract
-     2. VATToken_CH & VATToken_DE
-     3. CrossBorderContract
+   - After deployment, the contracts will appear in the 'Deployed Contracts' section at the bottom of the panel.
+ 
+    4.1  **Order of Deployment**:
+        1. ReceiptTokenContract
+        2. VATToken_CH & VATToken_DE
+        3. CrossBorderContract
+     
+    4.2  **Connecting the Deployed Contracts**:
+        1. In the VATToken_CH & VAToken_De contract call the setCBCAddress function with the address of the CrossBorderContract.
+        2. In the ReceiptTokenContract call the setVAT_DE_Contract & setVAT_CH_Contract functions with the corresponding contract addresses.
 
-5. **Linking Contracts:**
+    4.3  **Further Steps**:
+        1. Call the SetTokenCredit function and provide some tokens for the respective seller in the VATToken contract of the country of the seller.
+        2. The seller needs to call the buyVATTokens function to access the tokens from the TokenCredit.
+        3. The seller can call the function CreateReceiptToken, the VATTokens are sent to the government and the ReceiptTokens are created.
+
+6. **Linking Contracts:**
    - Since the 3 contracts need to interact with each other (e.g., `ReceiptTokenContract` needs the address of `VATTokenContract`), ensure you copy the deployed contract addresses and set them using the appropriate functions in the respective contracts.
 
-6. **Interact with the Contracts:**
+7. **Interact with the Contracts:**
    - In the 'Deployed Contracts' section, you can interact with each contract's functions.
    - Use the provided fields and buttons to call functions of the contract, such as creating tokens, transferring tokens across the border or refund taxes.
 
