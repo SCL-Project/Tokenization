@@ -10,7 +10,7 @@ Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (
 The need to change the VAT system arises from its inherent inefficiencies and susceptibility to fraud, as its all-phase taxation structure leads to complex calculations and creates opportunities for a range of fraudulent activities. Moreover, in Switzerland, common evasion methods like smuggling, undervaluation, and misuse of tax rates, as reported by the Bundesamt für Zoll und Grenzsicherheit (BAZG), highlight the persistent challenges in VAT administration, underscoring the urgency for systemic reform.
 
 ## Smart Contracts
-### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol)
+### [ReceiptTokenContract](VAT%20Fraud/ReceiptTokenContract.sol)
 - **Purpose**:
     The ReceiptTokenContract is an ERC721 contract and is a fundamental part of our blockchain-based VAT system, specifically designed to tokenize the buying and selling process. It aims to provide a transparent and immutable record of transactions, thereby significantly reducing the potential of VAT fraud. The contract plays a critical role in the digitization of receipts and VAT records, ensuring that every transaction is accurately and securely documented on the blockchain including details about the good or service. This system is particularly valuable for tracking and auditing purposes, providing a reliable and efficient means of managing VAT-related information. This means that the owner can present the receipt to the tax authority and transport the goods across the border in a transparent and legal manner. 
 - **Features**:
@@ -23,7 +23,7 @@ The need to change the VAT system arises from its inherent inefficiencies and su
   - **Locking Mechanism for Companies**: Provides a security feature to lock companies in case of fraudulent activities, enhancing overall system integrity.
   - **Cross-Border Functionality**: Coordinates with the CrossBorderContract for international transactions, handling different VAT rates and regulations.
 
-### [VATTokenContract](VAT%20fraud/VATTokenContract.sol)
+### [VATTokenContract](VAT%20Fraud/VATTokenContract.sol)
 - **Purpose**:
     The primary purpose of the VATTokenContract is an ERC20 Contract to digitize and manage the VAT process, bringing increased transparency, efficiency, and security to tax transactions. The VAT payment in this contract is also the basis to be able to create a receipt token. This contract aims to simplify VAT payments and refunds, reduce the potential for fraud, and streamline tax administration. By leveraging blockchain technology, it offers an innovative solution to traditional VAT challenges, particularly in complex tax calculations including input tax deduction.
 - **Features**:
@@ -35,7 +35,7 @@ The need to change the VAT system arises from its inherent inefficiencies and su
   - **Transfer Restrictions**: Implements rules to prevent unauthorized or non-compliant transfer of tokens, reinforcing the integrity of the VAT process.
   - **Buy and Sell Functionality**: Enables businesses to buy VAT tokens against their token credit and sell them back to the government, facilitating liquidity in the VAT ecosystem.
 
-### [CrossBorderContract](VAT%20fraud/CrossBorderContract.sol)
+### [CrossBorderContract](VAT%20Fraud/CrossBorderContract.sol)
 - **Purpose**:
     The CrossBorderContract plays a crucial role in managing cross-border transactions within the VAT system. It is designed to automate and streamline the VAT adjustments for products and services that cross borders. The primary goal is to simplify the complex tax implications of cross-border commerce, ensuring compliance with different VAT rates and regulations. This contract is essential for reducing administrative burdens, mitigating VAT fraud, and fostering a more transparent international trade environment.
 - **Features**:
