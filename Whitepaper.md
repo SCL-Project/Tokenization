@@ -50,12 +50,12 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 
 ## Installation to Compile, Deploy & Interact with the Contracts
 
-To interact with the `VATToken`, `ReceiptTokenContract`, and `CrossBorderContract` in Remix, follow these steps:
+To interact with the `Oracle`, `ReceiptTokenContract`, `CrossBorderContract`, `VATToken_CH` and `VATToken_DE` in Remix, follow these steps:
 1. **Open Remix IDE:**
    - Go to [Remix Ethereum IDE](https://remix.ethereum.org/).
 
 2. **Create the Contract Files:**
-   - In the File Explorer pane of Remix, create new files for each contract (`VATToken.sol`, `ReceiptTokenContract.sol`, `CrossBorderContract.sol`).
+   - In the File Explorer pane of Remix, create new files for each contract.
    - Copy and paste the Solidity code of each respective contract into these files.
 
 3. **Compile the Contracts:**
@@ -66,7 +66,7 @@ To interact with the `VATToken`, `ReceiptTokenContract`, and `CrossBorderContrac
    - Switch to the 'Deploy & Run Transactions' tab.
    - Connect to your chosen Ethereum environment using the 'Environment' dropdown.
    - Select the contract you wish to deploy from the 'Contract' dropdown.
-   - Enter any necessary constructor parameters.
+   - Enter any necessary constructor parameters
    - Click 'Deploy' to deploy each contract. 
    - After deployment, the contracts will appear in the 'Deployed Contracts' section at the bottom of the panel.
 
@@ -75,7 +75,7 @@ To interact with the `VATToken`, `ReceiptTokenContract`, and `CrossBorderContrac
 
 6. **Interact with the Contracts:**
    - In the 'Deployed Contracts' section, you can interact with each contract's functions.
-   - Use the provided fields and buttons to call functions of the contract, such as creating tokens, transferring ownership, setting rates, etc.
+   - Use the provided fields and buttons to call functions of the contract, such as creating tokens, transferring tokens across the border or refund taxes.
 
 ### Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
