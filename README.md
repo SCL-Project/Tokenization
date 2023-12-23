@@ -42,7 +42,7 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 - Integration of different VAT rates per country
 
 ### Contributions
-🌟 Your Contributions are Valued in the VAT Fraud Repository! 🌟
+🌟 Your Contributions are Valued in the VAT Fraud Repository! 🌟  
 
 If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.
 
