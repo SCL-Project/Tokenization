@@ -41,6 +41,10 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 - Exchange rate oracle CHF-EUR for precise currency swaps
 - Integration of different VAT rates per country
 
+### Contributions
+🌟 Your Contributions are Valued in the VAT Fraud Repository! 🌟
+If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.
+
 ### Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
 - <a href="https://github.com/SamuelClauss" style="text-decoration: none; color: black;">Samuel Clauss</a>
