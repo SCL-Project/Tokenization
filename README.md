@@ -11,8 +11,8 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 #### [ReceiptTokenContract](VAT%20Fraud/ReceiptTokenContract.sol): Creates a digital ReceiptToken for the buyer & seller
 #### [VATToken_CH](VAT%20Fraud/VATToken_CH.sol): Contract to pay VAT in Switzerland
 #### [VATToken_DE](VAT%20Fraud/VATToken_DE.sol): Contract to pay VAT in Germany
-#### [CrossBorderContract](VAT%20Fraud/CrossBorderContract.sol): Contract for cross-border transactions and simple border crossings
-#### [Oracle](VAT%20Fraud/Oracle.sol): Contract to similate an oracle for the exchange rates and VAT rates. Deployed at the address: 0x1ee17f86785fB0Ea5ff5B5D59DCeA41713eCEcF8
+#### [CrossBorderContract](VAT%20Fraud/CrossBorderContract.sol): Contract for cross-border transactions
+#### [Oracle (0x1ee17f86785fB0Ea5ff5B5D59DCeA41713eCEcF8)](VAT%20Fraud/Oracle.sol): Contract to similate an oracle for the exchange rates and VAT rates. Deployed at the address: 
 
 ### NatSpec Format
 - **[Solidity Documention](https://docs.soliditylang.org/en/latest/natspec-format.html)**
