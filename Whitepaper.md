@@ -68,7 +68,7 @@ To interact with the `Oracle`, `ReceiptTokenContract`, `CrossBorderContract`, `V
    - Select the contract you wish to deploy from the 'Contract' dropdown.
    - Enter any necessary constructor parameters
    - Click 'Deploy' to deploy each contract. 
-   - After deployment, the contracts will appear in the 'Deployed Contracts' section at the bottom of the panel.
+   - After deployment, the contracts will appear in the 'Deployed Contracts' section at the bottom of the panel.  
 4.1  **Order of Deployment**:
      1. ReceiptTokenContract
      2. VATToken_CH & VATToken_DE
