@@ -8,11 +8,11 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 ## Overview
 #### [Whitepaper](Whitepaper.md): The fundamentals behind the smart contracts
 ### Smart Contracts
-#### [ReceiptTokenContract](VAT%20fraud/ReceiptTokenContract.sol): Creates a digital ReceiptToken for the buyer & seller
-#### [VATToken_CH](VAT%20fraud/VATToken_CH.sol): Contract to pay VAT in Switzerland
-#### [VATToken_DE](VAT%20fraud/VATToken_DE.sol): Contract to pay VAT in Germany
-#### [CrossBorderContract](VAT%20fraud/CrossBorderContract.sol): Contract for cross-border transactions and simple border crossings
-#### [Oracle at 0x1ee17f86785fB0Ea5ff5B5D59DCeA41713eCEcF8](VAT%20fraud/Oracle.sol): Contract to similate an oracle for the exchange rates and VAT rates
+#### [ReceiptTokenContract](VAT%20Fraud/ReceiptTokenContract.sol): Creates a digital ReceiptToken for the buyer & seller
+#### [VATToken_CH](VAT%20Fraud/VATToken_CH.sol): Contract to pay VAT in Switzerland
+#### [VATToken_DE](VAT%20Fraud/VATToken_DE.sol): Contract to pay VAT in Germany
+#### [CrossBorderContract](VAT%20Fraud/CrossBorderContract.sol): Contract for cross-border transactions and simple border crossings
+#### [Oracle](VAT%20Fraud/Oracle.sol): Contract to similate an oracle for the exchange rates and VAT rates. Deployed at the address: 0x1ee17f86785fB0Ea5ff5B5D59DCeA41713eCEcF8
 
 ### NatSpec Format
 - **[Solidity Documention](https://docs.soliditylang.org/en/latest/natspec-format.html)**
