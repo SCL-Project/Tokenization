@@ -42,7 +42,7 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 - Exchange rate (CHF-EUR) oracle for precise currency swaps
 - VAT rate oracle for reliable VAT rates and to add multiple VAT rates per country depending on the industry
 - Integration of different VAT rates per country
-- getNFTData and getCompany are currently public so everybody can access the data
+- getNFTData and getCompany are currently public so everybody can access the data (safety concerns)
 
 ### Contributions
 🌟 Your Contributions are Valued in the VAT Fraud Repository! 🌟  
