@@ -22,7 +22,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     VATToken_DE public VAT_DE_Contract;
     bool VATToken_DE_set;
     bool VATToken_CH_set;
-    Oracle public OracleContract = Oracle(0x4901cf9AC5e0Df7dfACd9615A934F696761E9437);
+    Oracle public OracleContract = Oracle(0xE0A74b0171615099B3aeef9456eFcE181aF9aE8E);
     address initialOwner;
 
     /**
@@ -42,8 +42,8 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     /**
      * @dev Struct to store information of the ReceiptToken
      * @param Type The type of token ('SellerToken' or 'BuyerToken')
-     * @param buyer The buyer of a good involved in the transaction
-     * @param seller The seller of a good involved in the transaction
+     * @param buyer The buyer (company name) of a good involved in the transaction
+     * @param seller The seller (company name) of a good involved in the transaction
      * @param good The specific good or service that is sold
      * @param currency The currency of the transaction
      * @param country_of_sale The country of the selling, important for shippings across the border
@@ -84,7 +84,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     /**
      * @dev Struct to store the used percentage of used products to produce and sell another good.
      *      Is designed to make the supply chain more transparent
-     * @param TokenID The token ID of the product bought
+     * @param TokenID The tokenID of the product bought
      * @param UsagePercentage The percentage of the product used in the transaction for a further processed good
      */
     struct UsedProduct {
@@ -113,10 +113,22 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
 
     //------------------------------------------------Events------------------------------------------------------
     
+    /** @dev Emitted when a new SellerToken is created for a company. This logs the company's address and the unique identifier of the SellerToken
+     * @param company The address of the company for which the SellerToken is created
+     * @param tokenID The unique identifier of the created SellerToken
+     */
     event SellerTokenCreated(address company, uint56 tokenID);
 
+    /** @dev Emitted when a new BuyerToken is created for a company. This logs the company's address and the unique identifier of the BuyerToken
+     *  @param company The address of the company for which the BuyerToken is created
+     *  @param tokenID The unique identifier of the created BuyerToken
+    */
     event BuyerTokenCreated(address company, uint56 tokenID);
 
+    /** @dev Emitted when the end of a supply chain is reached, indicating no further actions are expected for the token. 
+     *       Signals the selling to and end consumer. Logs the unique identifier of the token
+     *  @param tokenID The unique identifier of the SellerToken reaching the end of the supply chain
+     */
     event EndOfChain(uint56 tokenID);
 
     //------------------------------------------------Modifier----------------------------------------------------
@@ -136,24 +148,53 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         require(msg.sender == initialOwner || msg.sender == address(this) || msg.sender == address(VAT_DE_Contract) || msg.sender == address(VAT_CH_Contract), "Only Government Authorities");
         _;
     }
-
-
+    
+    /**
+     * @dev Ensures that the function can only be called by the CrossBorderContract
+     */
+    modifier onlyCrossBorderContract() {
+        require(msg.sender == VAT_CH_Contract.getCBCAddress());
+        _;
+    }
+    
     //--------------------------------------------HelperFunctions-------------------------------------------------
 
-    function setVAT_DE_Contract(address _address) public onlyOwner {
+    /**
+     * @dev Sets the VATToken_DE contract to the provided address and marks it as set.
+     *      Can only be called by the contract owner
+     * @param _address The new address of the VATToken_DE contract
+     */
+    function setVAT_DE_Contract(address _address) external onlyOwner {
         VAT_DE_Contract = VATToken_DE(_address);
         VATToken_DE_set = true;
     }
 
-    function setVAT_CH_Contract(address _address) public onlyOwner {
+    /**
+     * @dev Sets the VATToken_CH contract to the provided address and marks it as set.
+     *      Can only be called by the contract owner
+     * @param _address The new address of the VATToken_CH contract
+     */
+    function setVAT_CH_Contract(address _address) external onlyOwner {
         VAT_CH_Contract = VATToken_CH(_address);
         VATToken_CH_set = true;
     }
-    
+
+    /**
+     * @dev Retrieves the data associated with a specific tokenID of a ReceiptToken (NFT)
+     * @param _tokenId The ID of the ReceiptToken to retrieve data for
+     * @return Receipt The struct containing the data of the ReceiptToken
+     */
     function getNFTData(uint56 _tokenId) public view returns(Receipt memory) {
         return NFTData[_tokenId];
     }
 
+    /** 
+     * @dev Retrieves the registration status, name, and unique identifier (UID) for a company given its address
+     * @param _address The address of the company to retrieve data for
+     * @return isRegistered Indicates whether the company is registered
+     * @return name The name of the company
+     * @return UID The unique identifier for the company
+     */
     function getCompany(address _address) public view returns(bool, string memory, string memory) {
         return (Companies[_address].isRegistered,
                 Companies[_address].name,
@@ -163,15 +204,16 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     //-----------------------------------------------Functions----------------------------------------------------
     
     /**
-     * @dev Adds a used product to a specific token. This function ensures that the caller is the owner of both the 'SellerToken' and the 'Buyertoken'. 
-     *      It also checks that the tokens have the correct types ('SellerToken' and 'BuyerToken') for the operation.
-     *      This is used to associate one or multiple 'BuyerToken' (and the usage percentages) with a 'SellerToken' in the supply chain.
-     *      Therefore companies can use it as a prove for the input tax refund
+     * @dev Adds a used product to a specific token. This function ensures that the caller is the owner of both 
+     *      the 'SellerToken' and the 'Buyertoken'. It also checks that the tokens have the correct types 
+     *      ('SellerToken' and 'BuyerToken') for the operation. This is used to associate one or multiple
+     *      'BuyerToken' (and the usage percentages) with a 'SellerToken' in the supply chain. Therefore 
+     *      companies can use it as a prove for the input tax refund
      * @param _tokenID The ID of the 'SellerToken' to which the _productTokenID is being added
      * @param _productTokenID The ID of a 'BuyerToken' from a product that is used for the good to be sold
      * @param _usedPercentage The percentage of the product token's usage for the sale of a good
      */
-    function addUsedProduct(uint56 _tokenID, uint56 _productTokenID, uint8 _usedPercentage) public {
+    function addUsedProduct(uint56 _tokenID, uint56 _productTokenID, uint8 _usedPercentage) external {
         require(ownerOf(_tokenID) == msg.sender && ownerOf(_productTokenID) == msg.sender, "Not the Tokenowner");
         require(
             keccak256(abi.encodePacked(NFTData[_tokenID].Type)) == keccak256(abi.encodePacked("SellerToken")) &&
@@ -187,13 +229,14 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev Removes a used product token ('BuyerToken') from a specific token. This function ensures that the caller is the owner of the 'SellerToken'. 
-     *      It searches for the product token within the list of used products associated with the 'SellerToken' and removes it if found
+     * @dev Removes a used product token ('BuyerToken') from a specific token. This function ensures that the caller
+     *      is the owner of the 'SellerToken'. It searches for the product token within the list of used products
+     *      associated with the 'SellerToken' and removes it if found
      * @param _tokenID The ID of the 'SellerToken' from which the _productTokenID is being removed
      * @param _productTokenID The ID of a 'BuyerToken' from a product that is used for the good to be sold
      * @return bool Returns true if the product token is successfully removed, false otherwise
      */
-    function removeUsedProduct(uint56 _tokenID, uint56 _productTokenID) public returns(bool) {
+    function removeUsedProduct(uint56 _tokenID, uint56 _productTokenID) external returns(bool) {
         require(ownerOf(_tokenID) == msg.sender, "Not the Tokenowner");
         for (uint24 i = 0; i < UsedProducts[_tokenID].length; i++) {
             if (UsedProducts[_tokenID][i].TokenID == _productTokenID) {
@@ -208,13 +251,14 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev Retrieves the list of used product tokens and their usage percentages associated with a specific 'SellerToken' (_tokenID)
-     *      This is used to understand how different product tokens ('BuyerTokens') contribute to the good sold represented by the 'SellerToken'
+     * @dev Retrieves the list of used product tokens and their usage percentages associated with a specific 
+     *      'SellerToken' (_tokenID). This is used to understand how different product tokens ('BuyerTokens')
+     *      contribute to the good sold represented by the 'SellerToken'
      * @param _tokenID The ID of the 'SellerToken' for which used products are being queried
-     * @return uint56[] An array of token IDs of the used products
+     * @return uint56[] An array of tokenIDs of the used products
      * @return uint8[] An array of the usage percentages corresponding to each used product token
      */
-    function getUsedProducts(uint56 _tokenID) public onlyGovernment view returns(uint56[] memory, uint8[] memory) {
+    function getUsedProducts(uint56 _tokenID) external onlyGovernment view returns(uint56[] memory, uint8[] memory) {
         uint56[] memory tokenIDs = new uint56[](UsedProducts[_tokenID].length);
         uint8[] memory percentages = new uint8[](UsedProducts[_tokenID].length);
         for (uint24 i = 0; i < UsedProducts[_tokenID].length; i++) {
@@ -228,56 +272,64 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
 
     /**
      * @dev Change the refund status in the data of the token to prevent double refundings
-     * @param _tokenID The ID of the 'SellerToken' to prove that the good has not been consumed but processed and sold
+     * @param _tokenID The ID of the 'SellerToken' to prove that the good has not been 
+     *                 consumed but processed and sold
      */
-    function changeRefundStatus(uint56 _tokenID) onlyGovernment public {
+    function changeRefundStatus(uint56 _tokenID) onlyGovernment external {
         NFTData[_tokenID].isRefunded = true;
     }
 
-    function changeCurrentCountry(uint56 _tokenID, string memory _country) public {
+    /**
+     * @dev Changes the current country associated with a specific tokenID.
+     *      This function can only be called by the authorized CrossBorderContract
+     * @param _tokenID The ID of the token for which the current country has to be changed
+     * @param _country The new country associated with the tokenID
+ */
+    function changeCurrentCountry(uint56 _tokenID, string memory _country) external onlyCrossBorderContract() {
         NFTData[_tokenID].current_country = _country;
     }
 
     /**
-     * @dev Companies can be registered by the government (onlyOwner) and are stored in the Companies mapping
+     * @dev Companies can be registered by the contract owner (onlyOwner) and are stored in the Companies mapping
      * @param _address Address of the company to be registered
      * @param _name Name of the company
      * @param _UID The unique identifier of the company
      */
-    function RegisterCompany(address _address, string memory _name, string memory _UID) public onlyOwner {
+    function RegisterCompany(address _address, string memory _name, string memory _UID) external onlyOwner {
         require(!Companies[_address].isRegistered, "Company already registered");
         Company memory newCompany = Company(true, _name, _UID);
         Companies[_address] = newCompany;
     }
 
     /**
-     * @dev Companies can be deleted by the government (onlyOwner) if they are registered
+     * @dev Companies can be deleted by the contract owner if they are registered. If VAT Fraud is detected, the
+     *      company can straight be excluded from the system
      * @param _address Address of the company to be deleted
      */
-    function DeleteCompany(address _address) public onlyOwner {
+    function DeleteCompany(address _address) external onlyOwner {
         require(Companies[_address].isRegistered, "Company already registered");
         delete Companies[_address];
     }
 
     /**
-     * @dev Companies can change their name and UID via the government (onlyOwner) and the new name and UID is updated into the mapping
+     * @dev Companies can change their name and UID via the contract owner and the new name and UID is updated into the mapping
      * @param _address Address of the company that changes its name
      * @param _name Name of the company to be changed
      * @param _UID The unique identifier of the company to be changed
 
      */
-    function ChangeCompany(address _address, string memory _name, string memory _UID) public onlyOwner {
+    function ChangeCompany(address _address, string memory _name, string memory _UID) external onlyOwner {
         require(Companies[_address].isRegistered, "Company not registered");
         Companies[_address].name = _name;
         Companies[_address].name = _UID;
     }
 
     /**
-     * @dev Mints a new token according to the ERC721 standard and assigns it to a specified address. This method includes safety checks 
-     *      to prevent common pitfalls in minting. The token ID is automatically set and the function increments the token ID counter 
-     *      for each new token.
+     * @dev Mints a new token according to the ERC721 standard and assigns it to a specified address. This method includes safety 
+     *      checks to prevent common pitfalls in minting. The tokenID is automatically set and the function increments the tokenID
+     *      counter for each new token
      * @param to The address to which the newly minted token will be assigned
-     * @return uint56 The token ID of the newly minted token
+     * @return uint56 The tokenID of the newly minted token
      */
     function safeMint(address to) public onlyGovernment returns(uint56) {
         uint56 tokenId = _nextTokenId++;
@@ -286,12 +338,13 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev Creates receipt tokens for a transaction involving a buyer and a seller. This function mints two tokens:
-     *      one representing the seller's side of the transaction and another for the buyer's side ('SellerToken and BuyerToken').
-     *      The function checks that neither the buyer nor the seller is locked. The VAT is calculated and has to be paid before 
+     * @dev Creates receipt tokens for a transaction involving a buyer and a seller (or only a seller at the end of the supply chain).
+     *      This function mints two tokens: one representing the seller's side of the transaction and another for the buyer's side
+     *      ('SellerToken and BuyerToken'). At the end of the chain only a 'SellerToken is minted and the good goes to the end consumer.
+     *      The function checks that neither the buyer nor the seller is locked. The VAT is calculated and is automatically paid before 
      *      the tokens can be minted. Therefore VAT-fraud can be prevented
-     * @param _buyer The Adress of the buyer of the transaction
-     * @param _seller The Adress of the seller of the transaction
+     * @param _buyer The name of the buyer company of the transaction
+     * @param _seller The name of the seller company of the transaction
      * @param _good The description of the good or service being transacted
      * @param _country_of_sale The country in which the sale takes place
      * @param _quantity The quantity of the good being transacted
@@ -306,7 +359,7 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
         uint32 _quantity,
         uint40 _total_price,
         address _buyerAddr
-        ) public onlyCompanies {
+        ) external onlyCompanies {
         uint40 _VAT_amount = _total_price * OracleContract.getVATRate(_country_of_sale) / 1000;
 
         bool x;

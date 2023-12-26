@@ -21,7 +21,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     address initialOwner;
     address private RCTAddress;
     ReceiptTokenContract public RCTContract;
-    Oracle public OracleContract = Oracle(0x4901cf9AC5e0Df7dfACd9615A934F696761E9437);
+    Oracle public OracleContract = Oracle(0xE0A74b0171615099B3aeef9456eFcE181aF9aE8E);
 
     /**
      * @dev Constructor to initialize the VATToken coontract of Germany. Sets the initialOwner of the contract
@@ -48,8 +48,8 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     /**
      * @dev Struct to store information of the ReceiptToken
      * @param Type The type of token ('SellerToken' or 'BuyerToken')
-     * @param buyer The buyer of a good involved in the transaction
-     * @param seller The seller of a good involved in the transaction
+     * @param buyer The buyer (company name) of a good involved in the transaction
+     * @param seller The seller (company name) of a good involved in the transaction
      * @param good The specific good or service that is sold
      * @param currency The currency of the transaction
      * @param country_of_sale The country of the selling, important for shippings across the border
@@ -132,7 +132,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      *      `TokenCredit` balance associated with the caller's address
      * @return The amount of token credit available for the calling address
      */
-    function checkTokenCredit() public view returns(uint256) {
+    function checkTokenCredit() external view returns(uint256) {
         return TokenCredit[msg.sender];
     }
 
@@ -149,8 +149,16 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @dev Sets the address of the CrossBorderContract
      * @param _address The address of the CrossBorderContract
      */
-    function setCBCAddress(address _address) public onlyOwner {
+    function setCBCAddress(address _address) external onlyOwner {
         CrossBorderContract = _address;
+    }
+
+    /**
+     * @dev Retrieves the address of the CrossBorderContract currently set in the system
+     * @return address The address of the CrossBorderContract
+     */
+    function getCBCAddress() external view returns(address) {
+        return CrossBorderContract;
     }
 
     //------------------------------------------------Funcitons-----------------------------------------------------
@@ -160,7 +168,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param _address The address to update
      * @param _amount The credit amount to set or add
      */
-    function setTokenCredit(address _address, uint256 _amount) public onlyGovernment {
+    function setTokenCredit(address _address, uint256 _amount) external onlyGovernment {
         if (checkIfKeyExists(_address)) {
             TokenCredit[_address] += _amount;
         } else {
@@ -234,7 +242,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     /**
-     * @dev Refunds taxes for a specific token ID by transferring the appropriate amount of VAT back to the owner
+     * @dev Refunds taxes for a specific tokenID by transferring the appropriate amount of VAT back to the owner
      *      of the ReceiptToken. The function calculates the refund amount based on the tax and percentages of used 
      *      products associated with the token. It supports refunds for tokens from Germany and Switzerland
      * @param _tokenID The ID of the token for which the tax refund is requested
@@ -271,7 +279,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      *      than the amount used as input for the function
      * @param _amount The amount of VAT tokens to buy from the TokenCredit
      */
-    function BuyVATTokens(uint40 _amount) public {
+    function BuyVATTokens(uint40 _amount) external {
         require(TokenCredit[msg.sender] >= _amount, "Your balance is not sufficient!");
         this.mint(msg.sender, _amount);
         TokenCredit[msg.sender] -= _amount;
@@ -287,7 +295,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      *      bank account
      * @param _amount The amount of VAT tokens to sell from the balance
      */
-    function SellVATTokens(uint40 _amount) public {
+    function SellVATTokens(uint40 _amount) external {
         require(balanceOf(msg.sender) >= _amount, "You have not enough VAT_GER Tokens!");
         _transfer(msg.sender, address(this), _amount);
         emit PaymentToBeReleased(msg.sender, _amount);

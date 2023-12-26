@@ -18,7 +18,7 @@ contract CrossBorderContract {
     ReceiptTokenContract public RCTContract;
     VATToken_CH public VAT_CH_Contract;
     VATToken_DE public VAT_DE_Contract;  
-    Oracle public OracleContract = Oracle(0x4901cf9AC5e0Df7dfACd9615A934F696761E9437);  
+    Oracle public OracleContract = Oracle(0xE0A74b0171615099B3aeef9456eFcE181aF9aE8E);  
     address[] private owners;
 
     /**
@@ -41,8 +41,8 @@ contract CrossBorderContract {
     /**
      * @dev Struct to store information of the ReceiptToken
      * @param Type The type of token ('SellerToken' or 'BuyerToken')
-     * @param buyer The buyer of a good involved in the transaction
-     * @param seller The seller of a good involved in the transaction
+     * @param buyer The buyer (company name) of a good involved in the transaction
+     * @param seller The seller (company name) of a good involved in the transaction
      * @param good The specific good or service that is sold
      * @param currency The currency of the transaction
      * @param country_of_sale The country of the selling, important for shippings across the border
@@ -119,7 +119,7 @@ contract CrossBorderContract {
      *      the value for the provided good to `true`. Only callable by an existing owner
      * @param good The name of the good marked as forbidden
      */
-    function addForbiddenGoods(string memory good) public onlyOwner {
+    function addForbiddenGoods(string memory good) external onlyOwner {
         ForbiddenGoods[good] = true;
     }
 
@@ -128,7 +128,7 @@ contract CrossBorderContract {
      *      the value for the provided good to `false`. Only callable by an existing owner
      * @param good The name of the good marked as allowed
      */
-    function removeForbiddenGoods(string memory good) public onlyOwner {
+    function removeForbiddenGoods(string memory good) external onlyOwner {
         ForbiddenGoods[good] = false;
     }
 
@@ -137,7 +137,7 @@ contract CrossBorderContract {
      *      address to `true`. Only callable by an existing owner
      * @param _newOwner The address to be added as a new owner
      */
-    function addOwner(address _newOwner) public onlyOwner {
+    function addOwner(address _newOwner) external onlyOwner {
         isOwner[_newOwner] = true;
     }
 
@@ -146,7 +146,7 @@ contract CrossBorderContract {
      *      for the provided address to `false`. Only callable by an existing owner
      * @param _owner The address of the owner to be removed
      */
-    function removeOwner(address _owner) public onlyOwner {
+    function removeOwner(address _owner) external onlyOwner {
         isOwner[_owner] = false;
     }
 
