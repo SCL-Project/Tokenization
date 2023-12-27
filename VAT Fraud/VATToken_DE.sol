@@ -295,7 +295,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
 
     /**
      * @dev Allows users to sell VAT tokens by withdrawing from their token balance. If the token balance is equal or 
-     *      higher than the balance. After successful compliance the government transfers CHF back to the companies
+     *      higher than the amount. After successful compliance the government transfers CHF back to the companies
      *      bank account
      * @param _amount The amount of VAT tokens to sell from the balance
      */
