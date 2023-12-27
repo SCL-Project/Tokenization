@@ -113,20 +113,22 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
 
     //------------------------------------------------Events------------------------------------------------------
     
-    /** @dev Emitted when a new SellerToken is created for a company. This logs the company's address and the unique identifier of the SellerToken
+    /** @dev Emitted when a new SellerToken is created for a company. This logs the company's address and the 
+     *       unique identifier of the SellerToken
      * @param company The address of the company for which the SellerToken is created
      * @param tokenID The unique identifier of the created SellerToken
      */
     event SellerTokenCreated(address company, uint56 tokenID);
 
-    /** @dev Emitted when a new BuyerToken is created for a company. This logs the company's address and the unique identifier of the BuyerToken
+    /** @dev Emitted when a new BuyerToken is created for a company. This logs the company's address and the unique 
+     *       identifier of the BuyerToken
      *  @param company The address of the company for which the BuyerToken is created
      *  @param tokenID The unique identifier of the created BuyerToken
     */
     event BuyerTokenCreated(address company, uint56 tokenID);
 
-    /** @dev Emitted when the end of a supply chain is reached, indicating no further actions are expected for the token. 
-     *       Signals the selling to and end consumer. Logs the unique identifier of the token
+    /** @dev Emitted when the end of a supply chain is reached, indicating no further actions are expected for 
+     *       the token. Signals the selling to and end consumer. Logs the unique identifier of the token
      *  @param tokenID The unique identifier of the SellerToken reaching the end of the supply chain
      */
     event EndOfChain(uint56 tokenID);
@@ -134,7 +136,8 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     //------------------------------------------------Modifier----------------------------------------------------
 
     /**
-     * @dev Ensures that the function can only be called by registered companies that are not locked or the owner himself
+     * @dev Ensures that the function can only be called by registered companies that are not locked or the 
+     *      owner himself
      */
     modifier onlyCompanies() {
         require(Companies[msg.sender].isRegistered, "Only registered Companies");
@@ -145,7 +148,8 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
      * @dev Ensures that the function can only be called by Swiss and German government entities
      */
     modifier onlyGovernment() {
-        require(msg.sender == initialOwner || msg.sender == address(this) || msg.sender == address(VAT_DE_Contract) || msg.sender == address(VAT_CH_Contract), "Only Government Authorities");
+        require(msg.sender == initialOwner || msg.sender == address(this) || msg.sender == address(VAT_DE_Contract) 
+        || msg.sender == address(VAT_CH_Contract), "Only Government Authorities");
         _;
     }
     
@@ -312,7 +316,8 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev Companies can change their name and UID via the contract owner and the new name and UID is updated into the mapping
+     * @dev Companies can change their name and UID via the contract owner and the new name and UID is updated into
+     *      the mapping
      * @param _address Address of the company that changes its name
      * @param _name Name of the company to be changed
      * @param _UID The unique identifier of the company to be changed
@@ -325,9 +330,9 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev Mints a new token according to the ERC721 standard and assigns it to a specified address. This method includes safety 
-     *      checks to prevent common pitfalls in minting. The tokenID is automatically set and the function increments the tokenID
-     *      counter for each new token
+     * @dev Mints a new token according to the ERC721 standard and assigns it to a specified address. This method
+     *      includes safety checks to prevent common pitfalls in minting. The tokenID is automatically set and the 
+     *      function increments the tokenID counter for each new token
      * @param to The address to which the newly minted token will be assigned
      * @return uint56 The tokenID of the newly minted token
      */
@@ -338,11 +343,12 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev Creates receipt tokens for a transaction involving a buyer and a seller (or only a seller at the end of the supply chain).
-     *      This function mints two tokens: one representing the seller's side of the transaction and another for the buyer's side
-     *      ('SellerToken and BuyerToken'). At the end of the chain only a 'SellerToken is minted and the good goes to the end consumer.
-     *      The function checks that neither the buyer nor the seller is locked. The VAT is calculated and is automatically paid before 
-     *      the tokens can be minted. Therefore VAT-fraud can be prevented
+     * @dev Creates receipt tokens for a transaction involving a buyer and a seller (or only a seller at the end 
+     *      of the supply chain). This function mints two tokens: one representing the seller's side of the transaction 
+     *      and another for the buyer's side ('SellerToken and BuyerToken'). At the end of the chain only a 'SellerToken 
+     *      is minted and the good goes to the end consumer. The function checks that neither the buyer nor the seller
+     *      is locked. The VAT is calculated and is automatically paid before the tokens can be minted. Therefore 
+     *      VAT-fraud can be prevented
      * @param _buyer The name of the buyer company of the transaction
      * @param _seller The name of the seller company of the transaction
      * @param _good The description of the good or service being transacted

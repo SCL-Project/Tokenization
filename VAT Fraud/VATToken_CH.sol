@@ -114,7 +114,8 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param _to The address of the receiver
      */
     modifier transferRestriction(address _from, address _to) {
-        require(_from == address(this) || _from == CrossBorderContract || _to == address(this) || _to == CrossBorderContract, "Transactions between companies are not allowed!");
+        require(_from == address(this) || _from == CrossBorderContract || _to == address(this) || 
+        _to == CrossBorderContract, "Transactions between companies are not allowed!");
         _;
     }
 
@@ -122,11 +123,12 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @dev Ensures that some functions can only be accessed by the government instances
      */
     modifier onlyGovernment() {
-        require(msg.sender == initialOwner || msg.sender == address(this) || msg.sender == CrossBorderContract || msg.sender == RCTAddress, "Only Government!");
+        require(msg.sender == initialOwner || msg.sender == address(this) || msg.sender == CrossBorderContract || 
+        msg.sender == RCTAddress, "Only Government!");
         _;
     }
 
-    //---------------------------------------------HelperFunctions--------------------------------------------------
+    //---------------------------------------------HelperFunctions-------------------------------------------------
 
     /**
      * @dev Returns the token credit amount of the caller. Provides a view function to check the 
@@ -209,7 +211,8 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param value The amount of tokens to transfer
      * @return bool Returns true if the transfer is successful
      */
-    function transfer(address _to, uint256 value) public override transferRestriction(msg.sender, _to) returns(bool) {
+    function transfer(address _to, uint256 value) public override transferRestriction(msg.sender, _to) 
+    returns(bool) {
     }
 
     /**
@@ -223,7 +226,8 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param value The amount of tokens to transfer
      * @return bool Returns true if the transfer is successful
      */
-    function transferFrom(address _from, address _to, uint256 value) public override transferRestriction(_from, _to) returns(bool) {
+    function transferFrom(address _from, address _to, uint256 value) public override transferRestriction(_from, _to) 
+    returns(bool) {
     }
 
     /**

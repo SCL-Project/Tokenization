@@ -181,10 +181,14 @@ contract CrossBorderContract {
         uint40 price = RCTContract.getNFTData(_tokenID).total_price;
 
         require(RCTContract.ownerOf(_tokenID) == msg.sender, "You are not the owner of this token!");
-        require(keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked(_from)), "The product must be in the same country you want to export from!");
-        require(OracleContract.getVATRate(_from) != 0, "The country you want to export your product from is not known!");
-        require(OracleContract.getVATRate(_to) != 0, "The country you want to export your product to is not known!");
-        require(keccak256(abi.encodePacked(Type)) == keccak256(abi.encodePacked("BuyerToken")), "You can't export a product you have already sold!");
+        require(keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked(_from)), 
+        "The product must be in the same country you want to export from!");
+        require(OracleContract.getVATRate(_from) != 0, 
+        "The country you want to export your product from is not known!");
+        require(OracleContract.getVATRate(_to) != 0, 
+        "The country you want to export your product to is not known!");
+        require(keccak256(abi.encodePacked(Type)) == keccak256(abi.encodePacked("BuyerToken")), 
+        "You can't export a product you have already sold!");
         require(!ForbiddenGoods[good], "It is forbidden to export or import this good!");
 
         uint40 taxes_payable = price * OracleContract.getVATRate(_to) / 1000;
@@ -200,13 +204,15 @@ contract CrossBorderContract {
         bool TaxesPaid = true;
 
         // Exporting to Germany
-        if (keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked("Switzerland")) && price > 300) {
+        if (keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked("Switzerland")) &&
+        price > 300) {
             TaxesPaid = VAT_CH_Contract.payTaxes(msg.sender, difference);
             assert(TaxesPaid);
             VAT_CH_Contract.transferGovernment(address(VAT_DE_Contract), taxes_payable);
 
         // Exporting to Switzerland
-        } else if (keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked("Germany")) && price > 300) {
+        } else if (keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked("Germany")) &&
+        price > 300) {
             VAT_DE_Contract.transferGovernment(address(VAT_CH_Contract), taxes_payable);
             VAT_DE_Contract.transferGovernment(msg.sender, difference);
         }
