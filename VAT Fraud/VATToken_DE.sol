@@ -40,7 +40,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     function decimals() public pure override returns (uint8) {
-        return 0;
+        return 2;
     }
 
     //------------------------------------------------Structs------------------------------------------------------
@@ -173,9 +173,9 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      */
     function setTokenCredit(address _address, uint256 _amount) external onlyGovernment {
         if (checkIfKeyExists(_address)) {
-            TokenCredit[_address] += _amount;
+            TokenCredit[_address] += _amount * 100;
         } else {
-            TokenCredit[_address] = _amount;
+            TokenCredit[_address] = _amount * 100;
         }
         emit TokenCreditReceived(_address, _amount);
     } 
@@ -186,7 +186,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param amount The amount of tokens to be minted
      */
     function mint(address to, uint256 amount) public onlyGovernment {
-        _mint(to, amount);
+        _mint(to, amount * 100);
     }
 
     /**
@@ -197,10 +197,10 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param _amount The amount of tokens to be transferred or minted
      */
     function transferGovernment(address _to, uint40 _amount) public onlyGovernment {
-        if (balanceOf(address(this)) >= _amount) {
-            _transfer(address(this), _to, _amount);
+        if (balanceOf(address(this)) >= _amount * 100) {
+            _transfer(address(this), _to, _amount * 100);
         } else {
-            mint(_to, _amount);
+            mint(_to, _amount * 100);
         }
     }
 
@@ -239,8 +239,8 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @return bool Returns true if the tax payment is successful, otherwise false
      */
     function payTaxes(address _from, uint40 _amount) public onlyGovernment returns(bool) {
-        if (balanceOf(_from) >= _amount) {
-            _transfer(_from, address(this), _amount);
+        if (balanceOf(_from) >= _amount * 100) {
+            _transfer(_from, address(this), _amount * 100);
             return true;
         }
         return false;
@@ -266,7 +266,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         (uint56[] memory IDs, uint8[] memory percentages) = RCTContract.getUsedProducts(_tokenID);
         for (uint24 i = 0; i < IDs.length; i++) {
             uint40 tax = RCTContract.getNFTData(IDs[i]).total_price * OracleContract.getVATRate(RCTContract.getNFTData(IDs[i]).current_country) / 1000;
-            refundAmount += tax * percentages[i] / 100;
+            refundAmount += tax * percentages[i];
             if (keccak256(abi.encodePacked(RCTContract.getNFTData(IDs[i]).country_of_sale)) == keccak256(abi.encodePacked("Switzerland"))) {
                 refundAmount = refundAmount / OracleContract.getExchangeRate() * 1000;
             }
@@ -285,9 +285,9 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param _amount The amount of VAT tokens to buy from the TokenCredit
      */
     function BuyVATTokens(uint40 _amount) external {
-        require(TokenCredit[msg.sender] >= _amount, "Your balance is not sufficient!");
-        this.mint(msg.sender, _amount);
-        TokenCredit[msg.sender] -= _amount;
+        require(TokenCredit[msg.sender] >= _amount * 100, "Your balance is not sufficient!");
+        this.mint(msg.sender, _amount * 100);
+        TokenCredit[msg.sender] -= _amount * 100;
         if (TokenCredit[msg.sender] == 0) {
             delete TokenCredit[msg.sender];
         }
@@ -301,8 +301,8 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param _amount The amount of VAT tokens to sell from the balance
      */
     function SellVATTokens(uint40 _amount) external {
-        require(balanceOf(msg.sender) >= _amount, "You have not enough VAT_GER Tokens!");
-        _transfer(msg.sender, address(this), _amount);
+        require(balanceOf(msg.sender) >= _amount * 100, "You have not enough VAT_GER Tokens!");
+        _transfer(msg.sender, address(this), _amount * 100);
         emit PaymentToBeReleased(msg.sender, _amount);
     }
 }
