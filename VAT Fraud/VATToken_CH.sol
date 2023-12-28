@@ -167,7 +167,8 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     //------------------------------------------------Functions-----------------------------------------------------
 
     /**
-     * @dev Set or update the token credit for an address. Only callable by the government instances
+     * @dev Set or update the token credit for an address. Only callable by the government instances. The
+     *      Tokencredit is set after the government received a fiat transaction from the corresponding company
      * @param _address The address to update
      * @param _amount The credit amount to set or add
      */
@@ -303,5 +304,9 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         require(balanceOf(msg.sender) >= _amount, "You have not enough VAT_CH Tokens!");
         _transfer(msg.sender, address(this), _amount);
         emit PaymentToBeReleased(msg.sender, _amount);
+    }
+
+    function ExchangeVATTokens(uint40 _amount) external {
+
     }
 }

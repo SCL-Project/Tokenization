@@ -219,4 +219,22 @@ contract CrossBorderContract {
         RCTContract.changeCurrentCountry(_tokenID, _to);
         emit CrossedBorder(_from, _to, _tokenID);
     }
+
+    /**
+     * @dev Determines if a token has crossed borders by comparing the country of sale and the current 
+     *      country of the token. It returns true if the token has crossed borders (i.e., the countries
+     *      are different) and false otherwise. This function can only be called by the contract owner
+     * @param _tokenID The ID of the token to check for the border crossing
+     * @return bool Returns true if the token has crossed borders, false if it has not
+     */
+    function wasBorderCrossed(uint56 _tokenID) external onlyOwner view returns(bool){
+        string memory CountryOfSale = RCTContract.getNFTData(_tokenID).country_of_sale;
+        string memory CurrentCountry = RCTContract.getNFTData(_tokenID).current_country;
+
+        if (keccak256(abi.encodePacked(CountryOfSale)) == keccak256(abi.encodePacked(CurrentCountry))) {
+            return false;
+        }   else {
+            return true;
+        }
+    }
 }

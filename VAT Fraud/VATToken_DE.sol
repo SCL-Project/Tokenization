@@ -166,7 +166,8 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     //------------------------------------------------Funcitons-----------------------------------------------------
 
     /**
-     * @dev Set or update the token credit for an address. Only callable by the government instances
+     * @dev Set or update the token credit for an address. Only callable by the government instances. The
+     *      Tokencredit is set after the government received a fiat transaction from the corresponding company
      * @param _address The address to update
      * @param _amount The credit amount to set or add
      */
@@ -295,7 +296,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
 
     /**
      * @dev Allows users to sell VAT tokens by withdrawing from their token balance. If the token balance is equal or 
-     *      higher than the amount. After successful compliance the government transfers CHF back to the companies
+     *      higher than the amount. After successful compliance the government transfers EUR back to the companies
      *      bank account
      * @param _amount The amount of VAT tokens to sell from the balance
      */
