@@ -15,7 +15,7 @@ contract Oracle is Ownable {
     uint16 private exchangeRate = 950;
 
     /**
-     * @dev Constructor to initialize the owner
+     * @dev Constructor to initialize the owner. Owner of the oracle is a trusted third party
      * @param initialOwner Address of the owner
      */
     constructor(address initialOwner) 
