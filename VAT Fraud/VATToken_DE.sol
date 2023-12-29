@@ -9,6 +9,7 @@
 // ***************************************************************************************************************
 pragma solidity ^0.8.20;
 
+import "./VATToken_CH.sol";
 import "./Oracle.sol";
 import "./ReceiptTokenContract.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -21,6 +22,7 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     address initialOwner;
     address private RCTAddress;
     ReceiptTokenContract public RCTContract;
+    VATToken_CH public VATToken_CH_Contract;
     Oracle public OracleContract = Oracle(0xE0A74b0171615099B3aeef9456eFcE181aF9aE8E);
 
     /**
