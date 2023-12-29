@@ -276,6 +276,8 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         (uint56[] memory IDs, uint8[] memory percentages) = RCTContract.getUsedProducts(_tokenID);
         for (uint24 i = 0; i < IDs.length; i++) {
             uint40 tax = RCTContract.getNFTData(IDs[i]).total_price * OracleContract.getVATRate(RCTContract.getNFTData(IDs[i]).current_country) / 1000;
+            // normally we would have to divide by 100 here to get the right percentage
+            // but since this token has two decimals we have to multiply everything by 100 and this cancels each other out
             refundAmount += tax * percentages[i];
             if (keccak256(abi.encodePacked(RCTContract.getNFTData(IDs[i]).country_of_sale)) == keccak256(abi.encodePacked("Germany"))) {
                 refundAmount = (refundAmount * OracleContract.getExchangeRate() / 1000);
