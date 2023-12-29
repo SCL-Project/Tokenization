@@ -97,7 +97,7 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param company The company that accesses the function
      * @param amount The amount to sold from the token balance
      */
-    event PaymentToBeReleased(address company, uint256 amount);
+    event PaymentToBeReleased(address company, uint256 amount, string otherInformation);
 
     //------------------------------------------------Mappings----------------------------------------------------
 
@@ -162,6 +162,14 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      */
     function getCBCAddress() external view returns(address) {
         return CrossBorderContract;
+    }
+
+    /**
+     * @dev Sets the address and the contract instance of the VATToken_DE Contract
+     * @param _address, The address of the VATToken_DE Contract
+     */
+    function setVAT_DE_Address(address _address) external onlyOwner {
+        VATToken_DE_Contract = VATToken_DE(_address);
     }
 
     //------------------------------------------------Functions-----------------------------------------------------
@@ -306,7 +314,12 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         emit PaymentToBeReleased(msg.sender, _amount);
     }
 
-    function ExchangeVATTokens(uint40 _amount) external {
-
+    /**
+     * @dev This function allows the owner of the VATToken_CH Contract to sell VAT_DE_Tokens if received.
+     * @param _amount, The amount of VAT tokens to sell
+     * @param otherInformation, Other information, like e.g. the number of the bank account, etc. 
+     */
+    function sellVAT_DE_Tokens(uint40 _amount, string memory otherInformation) external onlyOwner{
+        VATToken_DE_Contract.SellVATTokens(_amount, otherInformation);
     }
 }
