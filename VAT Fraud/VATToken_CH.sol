@@ -310,10 +310,10 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      *      bank account
      * @param _amount The amount of VAT tokens to sell from the balance
      */
-    function SellVATTokens(uint40 _amount) external {
+    function SellVATTokens(uint40 _amount, string memory otherInformation) external {
         require(balanceOf(msg.sender) >= _amount * 100, "You have not enough VAT_CH Tokens!");
         _transfer(msg.sender, address(this), _amount * 100);
-        emit PaymentToBeReleased(msg.sender, _amount);
+        emit PaymentToBeReleased(msg.sender, _amount, otherInformation);
     }
 
     /**
