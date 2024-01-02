@@ -319,7 +319,8 @@ contract VATToken_DE is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     }
 
     /**
-     * @dev This function allows the owner of the VATToken_DE Contract to sell VAT_CH_Tokens if received.
+     * @dev This function allows the owner of the VATToken_DE Contract to sell VAT_CH_Tokens if received. The VAT
+     *      amount is refunded in fiat money to the bank account of the seller of the VAT tokens
      * @param _amount, The amount of VAT tokens to sell
      * @param otherInformation, Other information, like e.g. the number of the bank account, etc. 
      */

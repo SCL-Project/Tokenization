@@ -3,7 +3,7 @@
 /// @title ReceiptTokenContract
 /// @author Samuel Clauss & Dario Ganz
 // Smart Contracts Lab, University of Zurich
-// Created: December 15, 2023
+// Created: December 20, 2023
 // ***************************************************************************************************************
 // Read the Whitepaper https://github.com/SCL-Project/Tokenization/blob/main/Whitepaper.md
 // ***************************************************************************************************************
