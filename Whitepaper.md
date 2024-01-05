@@ -82,10 +82,10 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 - **Features**:
   - **Ownership and Permissions**: Utilizes Ownable and therefore only one central authority of Switzerland and Germany can perform the setting of the rates in this contract.
   - **VAT Rate Management**: Manages and stores the VAT rates for different countries, allowing for dynamic and accurate VAT calculations in cross-border transactions.
-- **Currency Information Storage**: Keeps track of the official currencies used by different countries, ensuring that all financial transactions are processed in the correct currency.
-- **Exchange Rate Provision**: Manages and stores the exchange rate between CHF and EUR, vital for transactions involving Switzerland and Germany. This feature is critical for accurately converting VAT amounts between different currencies.
-- **Owner-Controlled Updates**: Designed to allow only the contract owner (a trusted third party) to update VAT rates, currencies, and exchange rates, maintaining the integrity and reliability of the data.
-- **Data Deletion Functionality**: Provides the contract owner with the ability to delete outdated or incorrect VAT rates and currency information, ensuring the system's data remains current and accurate.
+  - **Currency Information Storage**: Keeps track of the official currencies used by different countries, ensuring that all financial transactions are processed in the correct currency.
+  - **Exchange Rate Provision**: Manages and stores the exchange rate between CHF and EUR, vital for transactions involving Switzerland and Germany. This feature is critical for accurately converting VAT amounts between different currencies.
+  - **Owner-Controlled Updates**: Designed to allow only the contract owner (a trusted third party) to update VAT rates, currencies, and exchange rates, maintaining the integrity and reliability of the data.
+  - **Data Deletion Functionality**: Provides the contract owner with the ability to delete outdated or incorrect VAT rates and currency information, ensuring the system's data remains current and accurate.
 
 ## Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
