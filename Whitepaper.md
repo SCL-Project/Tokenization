@@ -76,7 +76,16 @@ The need to change the VAT system arises from its inherent inefficiencies and su
   - **Event Logging for Cross-Border Movements**: Records details of items crossing borders, including origin, destination, and token ID, for transparency and tracking.
   - **Integration with VATToken and ReceiptTokenContract**: Works in conjunction with VATTokenContract for tax payments and ReceiptTokenContract for validating transaction details.
 
-
+### [Oracle ](VAT%20Fraud/Oracle.sol)
+- **Purpose**:
+    The Oracle contract serves as a crucial component in the blockchain-based VAT system, providing reliable and up-to-date financial data to other contracts. It functions as a trusted source for VAT rates and exchange rates. The primary role of this contract is to ensure that all VAT calculations and financial transactions within the system are based on accurate and current financial data, thereby ensuring compliance and consistency in VAT processing across different countries.
+- **Features**:
+  - **Ownership and Permissions**: Utilizes Ownable and therefore only one central authority of Switzerland and Germany can perform the setting of the rates in this contract.
+  - **VAT Rate Management**: Manages and stores the VAT rates for different countries, allowing for dynamic and accurate VAT calculations in cross-border transactions.
+- **Currency Information Storage**: Keeps track of the official currencies used by different countries, ensuring that all financial transactions are processed in the correct currency.
+- **Exchange Rate Provision**: Manages and stores the exchange rate between CHF and EUR, vital for transactions involving Switzerland and Germany. This feature is critical for accurately converting VAT amounts between different currencies.
+- **Owner-Controlled Updates**: Designed to allow only the contract owner (a trusted third party) to update VAT rates, currencies, and exchange rates, maintaining the integrity and reliability of the data.
+- **Data Deletion Functionality**: Provides the contract owner with the ability to delete outdated or incorrect VAT rates and currency information, ensuring the system's data remains current and accurate.
 
 ## Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
