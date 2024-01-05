@@ -29,38 +29,54 @@ The need to change the VAT system arises from its inherent inefficiencies and su
 
 ### [VATTokenContract Switzerland](VAT%20Fraud/VATToken_CH.sol)
 - **Purpose**:
-    The VATTokenContract for Switzerland is an ERC20 token contract, forming an essential part of the blockchain-based VAT system. It is specifically designed for handling VAT transactions in Switzerland, ensuring seamless and secure VAT processing. The VAT payment in this contract is the basis to be able to create a receipt token. The contract's primary role is to facilitate the issuance, transfer, and management of VAT tokens, representing VAT amounts in digital form. This contract serves as a digital ledger for VAT transactions, making VAT management more efficient and transparent, particularly for cross-border transactions. Therefore the contract streamlines VAT payments and refunds and fraud scenarios in complex tax calculation scenarios and input tax deduction can be prevented.
+    The VATTokenContract for Switzerland is an ERC20 (ERC20Burnable and ERC20Permit) token contract, forming an essential part of the blockchain-based VAT system. It is specifically designed for handling VAT transactions in Switzerland, ensuring seamless and secure VAT processing. The VAT payment in this contract is the basis to be able to create a receipt token. The contract's primary role is to facilitate the issuance, transfer, and management of VAT tokens, representing VAT amounts in digital form. This contract serves as a digital ledger for VAT transactions, making VAT management more efficient and transparent, particularly for cross-border transactions. Therefore the contract streamlines VAT payments and refunds and fraud scenarios in complex tax calculation scenarios and input tax deduction can be prevented.
 - **Features**:
-  - **Ownership and Permissions**: Utilizes Ownable and custom modifiers to ensure that only authorized entities (like the Swiss tax authority) can perform critical operations.
+  - **Ownership and Permissions**: Utilizes Ownable and custom modifiers to ensure that only authorized entities (Swiss tax authority) can perform critical operations.
   - **Tokenization of VAT**: The contract creates a digital representation of VAT credit given by the government after a fiat transaction is made, allowing for seamless and transparent tracking of VAT payments and obligations.
   - **ERC20 Compliance**: Adheres to the ERC20 standard, ensuring compatibility with a wide range of wallets and services in the Ethereum ecosystem.
-  - **Tax Payment and Refund Mechanism**: Facilitates VAT payments from businesses to the government and manages tax refunds, ensuring accurate, fast and transparent transactions.
+  - **Tax Payment and Refund Mechanism**: Facilitates VAT payments from businesses to the government and manages tax refunds, ensuring accurate, fast and transparent transactions with the use of the VAT rates of the Oracle.
   - **Governmental Oversight**: Empowers government entities, such as tax authority, to mint, distribute, and manage VAT tokens, ensuring regulatory compliance.
   - **Transfer Restrictions**: Implements rules to prevent unauthorized or non-compliant transfer of tokens, reinforcing the integrity of the VAT process.
   - **Buy and Sell Functionality**: Enables businesses to buy VAT tokens against their token credit and sell them back to the government, facilitating liquidity in the VAT ecosystem.
   - **Token Purchase and Redemption**: Allows companies to buy VAT tokens using their token credit and sell VAT tokens back to the government, enhancing liquidity and flexibility in VAT management.
+  - **Event Logging**: The VATTokenContract for Germany incorporates event logging as a crucial feature to provide transparency and traceability in its operations. This feature is essential for auditing, regulatory compliance, and maintaining the integrity of the VAT system.
   - **Receipt Token Integration**: Integrates with the ReceiptTokenContract to access detailed transaction data of the ReceiptTokens for accurate VAT calculation and refund processing.
-  - **Cross-Border Considerations**: Coordinates with the CrossBorderContract to handle VAT transactions across borders, addressing international VAT complexities.
+  - **Cross-Border Considerations**: Works with the CrossBorderContract for managing VAT in cross-border transactions, addressing VAT complexities between Switzerland and Germany.
   - **VATTokenContract Collaboration**: Works in conjunction with the VATTokenContract of Germany
 
 ### [VATTokenContract Germany](VAT%20Fraud/VATToken_DE.sol)
 - **Purpose**:
-    The VATTokenContract for Germany, an ERC20 token contract, is a crucial part of the blockchain-based VAT system, tailored for VAT transactions in Germany. Its design ensures seamless VAT processing within the German context. It operates exactly the same as the VATTokenContract of Switzerland.
+    The VATTokenContract for Germany, an ERC20 (ERC20Burnable and ERC20Permit) token contract, is a crucial part of the blockchain-based VAT system, tailored for VAT transactions in Germany. Its design ensures seamless VAT processing within the German context. It operates exactly the same as the VATTokenContract of Switzerland.
 - **Features**:
-  - **Automated VAT Adjustment**: Calculates and settles tax differences based on varying VAT rates of countries involved in the transaction.
+  - **Ownership and Permissions**: Uses Ownable and custom modifiers, ensuring operations are conducted only by authorized entities
+(German tax authority).
+  - **Tokenization of VAT**: Digitally represents VAT credit from the government, facilitating transparent tracking and management of VAT payments.
+  - **ERC20 Compliance**: Follows the ERC20 standard for compatibility across the Ethereum ecosystem.
+  - **Tax Payment and Refund Mechanism**: Facilitates VAT payments from businesses to the government and manages tax refunds, ensuring accurate, fast and transparent transactions with the use of the VAT rates of the Oracle.
+  - **Governmental Oversight**: Enables government entities to mint, distribute, and manage VAT tokens, adhering to regulatory requirements.
+  - **Transfer Restrictions**: Incorporates rules to prevent unauthorized token transfers, maintaining the VAT process's integrity.
+  - **Buy and Sell Functionality**: Permits businesses to purchase VAT tokens against their token credit and sell them back to the government, enhancing liquidity.
+  - **Token Purchase and Redemption**: Allows companies to buy VAT tokens using their token credit and sell VAT tokens back to the government, enhancing liquidity and flexibility in VAT management.
+  - **Event Logging**: The VATTokenContract for Germany incorporates event logging as a crucial feature to provide transparency and traceability in its operations. This feature is essential for auditing, regulatory compliance, and maintaining the integrity of the VAT system.
+  - **Receipt Token Integration**: Collaborates with the ReceiptTokenContract to utilize transaction data for precise VAT calculation and refunds.
+  - **Cross-Border Considerations**: Works with the CrossBorderContract for managing VAT in cross-border transactions, addressing VAT complexities between Germany and Switzerland.
+  - **VATTokenContract Collaboration**: Interacts with the VATTokenContract of Switzerland for cohesive VAT management across the two countries.
 
 ### [CrossBorderContract](VAT%20Fraud/CrossBorderContract.sol)
 - **Purpose**:
     The CrossBorderContract plays a crucial role in managing cross-border transactions within the VAT system. It is designed to automate and streamline the VAT adjustments for products and services that cross borders. The primary goal is to simplify the complex tax implications of cross-border commerce, ensuring compliance with different VAT rates and regulations. This contract is essential for reducing administrative burdens, mitigating VAT fraud, and fostering a more transparent international trade environment.
 - **Features**:
+  - **Multi-Government Accessibility**: Designed to be operated by multiple government entities (Switzerland & Germany, reflecting the collaborative nature of international trade.
   - **Automated VAT Adjustment**: Calculates and settles tax differences based on varying VAT rates of countries involved in the transaction.
   - **Ownership Verification**: Ensures that the caller of the function is the rightful owner of the token representing the product being exported.
   - **Legal Export Check**: Verifies that the product can be legally exported and imported, adhering to international trade regulations.
-  - **VAT Rate Management**: Maintains a mapping of VAT rates associated with different countries, allowing for dynamic tax calculations.
+  - **VAT Rate Management**: Uses an Oracle allowing for dynamic tax calculations.
   - **Forbidden Goods Handling**: Manages a list of goods that are forbidden from export or import, enhancing regulatory compliance.
-  - **Cross-Border Tax Settlements**: Adjusts VAT payments in accordance with the destination country's tax rate, handling both tax credits and additional tax requirements.
+  - **Cross-Border Tax Settlements**: Adjusts VAT payments in accordance with the destination country's tax rate using the data of the Oracle, handling both tax credits and additional tax requirements.
+  - **Event Logging for Cross-Border Movements**: Records details of items crossing borders, including origin, destination, and token ID, for transparency and tracking.
   - **Integration with VATToken and ReceiptTokenContract**: Works in conjunction with VATTokenContract for tax payments and ReceiptTokenContract for validating transaction details.
-  - **Multi-Government Accessibility**: Designed to be operated by multiple government entities (Switzerland & Germany, reflecting the collaborative nature of international trade.
+
+
 
 ## Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
