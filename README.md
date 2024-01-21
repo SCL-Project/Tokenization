@@ -74,7 +74,7 @@ Follow this sequence for deploying your contracts:
   
 #### 4.2 Connecting the Deployed Contracts
 Establish connections between your contracts with these steps:
-  1. In the `VATToken_CH` & `VAToken_De` contract, call the `setCBCAddress` function using the address of the `CrossBorderContract`.
+  1. In the `VATToken_CH` & `VAToken_De` contract, call the `setCBCAddress` function using the address of the `CrossBorderContract` and call in each of the two contracts the setVAT_DE/CH_Address and set the Address of the other VATToken Contract.
   2. In the `ReceiptTokenContract`, invoke `setVAT_DE_Contract` & `setVAT_CH_Contract` functions with the corresponding contract addresses.
 
 #### 4.3 Further Steps
