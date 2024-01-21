@@ -6,16 +6,22 @@ Similar to Ainsworth et al. (2016), the team proposed incorporating a VATToken (
 
 <img src="VAT Fraud/Graphics/Prototype.png" width="650"/>
 ### 1.	Companies
+
 Companies are the primary focus of the prototype. They can be centrally registered in the ReceiptTokenContract and interact with this contract as well as with the VATToken_CH and VATToken_De contract. The companies can have locations in Switzerland and Ger-many.
 ### 2.	Tax Authorities
+
 These represent the governmental tax entities for each country. They receive information from the ReceiptToken and VATToken contracts, which include transaction data relevant for tax collection, regulation and auditing. The tax authorities grant a token credit when they receive a fiat payment.
 ### 3.	ReceiptTokenContract
+
 This contract is the centerpiece of the smart contract solution. It keeps track of the regis-tered companies, and its central function is to create for every transaction a Receipt Token for the buyer as well as the seller. This system is particularly valuable for tracking and au-diting purposes for presenting the receipt to the tax authority and transporting the goods across the border in a transparent and legal manner. The tokens of the seller and buyer are linked, thus capturing the entire supply chain. The contract uses the oracle contract to cal-culate the VAT amounts payable according to the current VAT rates.
 ### 4.	VATToken Contracts
+
 The VATToken contracts are used to simplify the VAT payments and refunds using either the VAT_CH or the VAT_DE token to reduce the potential of fraud and streamline tax administration. The VAT payment in these contracts is also the basis to be able to create a Receipt Token in the ReceiptTokenContract. For accuracy in the calculation the contract accesses the VAT rates from the Oracle for refunds.
 ### 5.	Oracle Contract
+
 The oracle contract simulates a real blockchain oracle by setting the VAT rates and ex-change rate for the two countries. These rates can only be changed by government entities.
 ### 6.	CrossBorderContract
+
 This contract plays a crucial role in managing cross-border transactions within the VAT system. The primary goal is to simplify the complex tax implications of cross-border commerce, ensuring compliance with different VAT rates and regulations. This contract is essential for reducing administrative burdens, mitigating VAT fraud, and fostering a more transparent international trade environment. The contract automatically calculates the VAT difference of Switzerland and Germany by calling the oracle for the VAT rates and either pays (Switzerland to Germany) the difference from the companies account or refunds (Germany to Switzerland) the difference to the companies account. 
 
 
