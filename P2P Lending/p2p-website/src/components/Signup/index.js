@@ -12,7 +12,7 @@ import {
     Form,
 } from './SignupElementsElements';
 
-const LogIn = () => {
+const SignUp = () => {
   return (
     <>
         <Container>
@@ -35,4 +35,4 @@ const LogIn = () => {
   )
 }
 
-export default LogIn;
+export default SignUp;
