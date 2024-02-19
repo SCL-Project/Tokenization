@@ -1,5 +1,5 @@
 import React from 'react'
-import LogIn from '../components/Login'
+import SignUp from '../components/Signup'
 
 const SignUpPage = () => {
   return (

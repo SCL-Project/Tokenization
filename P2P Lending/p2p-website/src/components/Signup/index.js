@@ -10,7 +10,7 @@ import {
     FormButton,
     Text,
     Form,
-} from './SignupElementsElements';
+} from './SignupElements';
 
 const SignUp = () => {
   return (
@@ -20,7 +20,7 @@ const SignUp = () => {
                 <Icon to="/">P2P-Lending</Icon> 
                 <FormContent>
                     <Form action="#">
-                        <FormH1>Log in to your account</FormH1>
+                        <FormH1>Registre</FormH1>
                         <FormLable htmlFor='for'>Email</FormLable>
                         <FormInput type='email' required />
                         <FormLable htmlFor = 'for'>Password</FormLable>
