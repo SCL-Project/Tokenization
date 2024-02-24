@@ -94,6 +94,9 @@ Complete the setup with the following actions:
 🌟 Your Contributions are Valued in the VAT Fraud Repository! 🌟  
 If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.
 
+## License
+This project is licensed under the MIT License
+
 ### Contributors
 - <a href="https://github.com/darioganz" style="text-decoration: none; color: black;">Dario Ganz</a>
 - <a href="https://github.com/SamuelClauss" style="text-decoration: none; color: black;">Samuel Clauss</a>
