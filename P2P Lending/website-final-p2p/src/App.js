@@ -6,6 +6,8 @@ import LogIn from './pages/login'
 import SignUp from './pages/signup';
 import SignUp1 from './components/SignUp1';
 import SignUp2 from './components/SignUp2';
+import MarketPage from './pages/marketplace';
+
 
 
 function App() {
@@ -15,6 +17,7 @@ function App() {
         <Route path='/' element={<Home />} exact />
         <Route path='/login' element={<LogIn />} />
         <Route path='/signupP' element={<SignUp2 />} />
+        <Route path='/Marketplace' element={<MarketPage />} />
       </Routes>
     </Router>
   );
