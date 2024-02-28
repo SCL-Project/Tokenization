@@ -11,7 +11,7 @@ interface IERC20 {
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 }
 
-contract FlexibleP2PLending {
+contract P2PLending {
     address public stablecoinAddress; // Address of the stablecoin contract
 
     // Event to emit when a credit is granted successfully
