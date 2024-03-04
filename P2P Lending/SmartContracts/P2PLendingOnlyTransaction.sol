@@ -12,18 +12,11 @@ interface IERC20 {
 }
 
 contract P2PLending {
-    address public stablecoinAddress; // Address of the stablecoin contract
+    // Hardcoded address of the USDC contract on Mumbai testnet
+    address public stablecoinAddress = 0x9999f7Fea5938fD3b1E26A12c3f2fb024e194f97;
 
     // Event to emit when a credit is granted successfully
     event CreditGranted(address indexed lender, address indexed borrower, uint256 amount);
-
-    /**
-     * @dev Sets the stablecoin contract address.
-     * @param _stablecoinAddress The address of the stablecoin contract.
-     */
-    constructor(address _stablecoinAddress) {
-        stablecoinAddress = _stablecoinAddress;
-    }
 
     /**
      * @dev Allows a lender to grant credit by transferring a specific amount of stablecoin to a borrower.
@@ -37,12 +30,5 @@ contract P2PLending {
         emit CreditGranted(_lender, _borrower, _amount);
     }
 
-    /**
-     * @dev Allows updating the stablecoin address. This function can be restricted or managed as needed.
-     * @param _newStablecoinAddress The new address of the stablecoin contract.
-     */
-    function updateStablecoinAddress(address _newStablecoinAddress) public {
-        // Add any access control or validation logic if necessary
-        stablecoinAddress = _newStablecoinAddress;
-    }
+    // Removed the updateStablecoinAddress function to prevent changing the hardcoded address
 }
