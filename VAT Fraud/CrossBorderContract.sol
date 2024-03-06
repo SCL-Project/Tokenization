@@ -170,10 +170,9 @@ contract CrossBorderContract {
      *      the VAT payments according to the VAT rate of the destination country if the price is higher than
      *      300 CHF or EUR. If the price is lower than 300 just the current country of the good is exchanged
      * @param _tokenID The ID of the token representing the good being exported
-     * @param _from The country from which the good is being exported
      * @param _to The country to which the good is being exported
      */
-    function CrossBorder(uint56 _tokenID, string memory _from, string memory _to) external onlyRegisteredCompanies {
+    function CrossBorder(uint56 _tokenID, string memory _to) external onlyRegisteredCompanies {
         string memory Type = RCTContract.getNFTData(_tokenID).Type;
         string memory Country = RCTContract.getNFTData(_tokenID).country_of_sale;
         string memory good = RCTContract.getNFTData(_tokenID).good;
@@ -181,10 +180,6 @@ contract CrossBorderContract {
         uint40 price = RCTContract.getNFTData(_tokenID).total_price;
 
         require(RCTContract.ownerOf(_tokenID) == msg.sender, "You are not the owner of this token!");
-        require(keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked(_from)), 
-        "The product must be in the same country you want to export from!");
-        require(OracleContract.getVATRate(_from) != 0, 
-        "The country you want to export your product from is not known!");
         require(OracleContract.getVATRate(_to) != 0, 
         "The country you want to export your product to is not known!");
         require(keccak256(abi.encodePacked(Type)) == keccak256(abi.encodePacked("BuyerToken")), 
@@ -217,7 +212,7 @@ contract CrossBorderContract {
             VAT_DE_Contract.transferGovernment(msg.sender, difference);
         }
         RCTContract.changeCurrentCountry(_tokenID, _to);
-        emit CrossedBorder(_from, _to, _tokenID);
+        emit CrossedBorder(Country, _to, _tokenID);
     }
 
     /**
