@@ -203,13 +203,13 @@ contract CrossBorderContract {
         price > 300) {
             TaxesPaid = VAT_CH_Contract.payTaxes(msg.sender, difference);
             assert(TaxesPaid);
-            VAT_CH_Contract.transferGovernment(address(VAT_DE_Contract), taxes_payable);
+            VAT_CH_Contract.transferGovernment(address(VAT_DE_Contract), taxes_payable * 100);
 
         // Exporting to Switzerland
         } else if (keccak256(abi.encodePacked(Country)) == keccak256(abi.encodePacked("Germany")) &&
         price > 300) {
-            VAT_DE_Contract.transferGovernment(address(VAT_CH_Contract), taxes_payable);
-            VAT_DE_Contract.transferGovernment(msg.sender, difference);
+            VAT_DE_Contract.transferGovernment(address(VAT_CH_Contract), taxes_payable * 100);
+            VAT_DE_Contract.transferGovernment(msg.sender, difference * 100);
         }
         RCTContract.changeCurrentCountry(_tokenID, _to);
         emit CrossedBorder(Country, _to, _tokenID);
