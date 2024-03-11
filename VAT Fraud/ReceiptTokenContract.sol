@@ -20,8 +20,6 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     uint56 private _nextTokenId = 1;
     VATToken_CH public VAT_CH_Contract;
     VATToken_DE public VAT_DE_Contract;
-    bool VATToken_DE_set;
-    bool VATToken_CH_set;
     Oracle public OracleContract = Oracle(0xE0A74b0171615099B3aeef9456eFcE181aF9aE8E);
     address initialOwner;
 
@@ -162,26 +160,18 @@ contract ReceiptTokenContract is ERC721, ERC721Burnable, Ownable {
     }
     
     //--------------------------------------------HelperFunctions-------------------------------------------------
-
+    
     /**
-     * @dev Sets the VATToken_DE contract to the provided address and marks it as set.
+     * @dev Sets the setVATToken_Contracts contract to the provided address and marks it as set.
      *      Can only be called by the contract owner
-     * @param _address The new address of the VATToken_DE contract
+     * @param _VATToken_DE The new address of the VATToken_DE contract
+     * @param _VATToken_CH The new address of the VATToken_CH contract
      */
-    function setVAT_DE_Contract(address _address) external onlyOwner {
-        VAT_DE_Contract = VATToken_DE(_address);
-        VATToken_DE_set = true;
+    function setVATToken_Contracts(address _VATToken_CH, address _VATToken_DE) external onlyOwner {
+        VAT_DE_Contract = VATToken_DE(_VATToken_DE);
+        VAT_CH_Contract = VATToken_CH(_VATToken_CH);
     }
 
-    /**
-     * @dev Sets the VATToken_CH contract to the provided address and marks it as set.
-     *      Can only be called by the contract owner
-     * @param _address The new address of the VATToken_CH contract
-     */
-    function setVAT_CH_Contract(address _address) external onlyOwner {
-        VAT_CH_Contract = VATToken_CH(_address);
-        VATToken_CH_set = true;
-    }
 
     /**
      * @dev Retrieves the data associated with a specific tokenID of a ReceiptToken (NFT)

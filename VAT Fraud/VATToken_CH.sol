@@ -152,10 +152,12 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
 
     /**
      * @dev Sets the address of the CrossBorderContract
-     * @param _address The address of the CrossBorderContract
+     * @param _CBC_address The address of the CrossBorderContract
+     * @param _VAT_DE_address, The address of the VATToken_DE Contract
      */
-    function setCBCAddress(address _address) external onlyOwner {
-        CrossBorderContract = _address;
+    function contractAddresses(address _CBC_address, address _VAT_DE_address) external onlyOwner {
+        CrossBorderContract = _CBC_address;
+        VATToken_DE_Contract = VATToken_DE(_VAT_DE_address);
     }
 
     /**
@@ -164,14 +166,6 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      */
     function getCBCAddress() external view returns(address) {
         return CrossBorderContract;
-    }
-
-    /**
-     * @dev Sets the address and the contract instance of the VATToken_DE Contract
-     * @param _address, The address of the VATToken_DE Contract
-     */
-    function setVAT_DE_Address(address _address) external onlyOwner {
-        VATToken_DE_Contract = VATToken_DE(_address);
     }
 
     //------------------------------------------------Functions-----------------------------------------------------
@@ -208,10 +202,10 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
      * @param _amount The amount of tokens to be transferred or minted
      */
     function transferGovernment(address _to, uint40 _amount) public onlyGovernment {
-        if (balanceOf(address(this)) >= _amount * 100) {
-            _transfer(address(this), _to, _amount * 100);
+        if (balanceOf(address(this)) >= _amount) {
+            _transfer(address(this), _to, _amount);
         } else {
-            mint(_to, _amount * 100);
+            mint(_to, _amount);
         }
     }
 
@@ -275,7 +269,7 @@ contract VATToken_CH is ERC20, ERC20Burnable, Ownable, ERC20Permit {
         uint40 refundAmount;
         (uint56[] memory IDs, uint8[] memory percentages) = RCTContract.getUsedProducts(_tokenID);
         for (uint24 i = 0; i < IDs.length; i++) {
-            uint40 tax = RCTContract.getNFTData(IDs[i]).total_price * OracleContract.getVATRate(RCTContract.getNFTData(IDs[i]).current_country) / 1000;
+            uint40 tax = RCTContract.getNFTData(IDs[i]).total_price * 100 * OracleContract.getVATRate(RCTContract.getNFTData(IDs[i]).current_country) / 1000;
             refundAmount += tax * percentages[i] / 100;
             if (keccak256(abi.encodePacked(RCTContract.getNFTData(IDs[i]).country_of_sale)) == keccak256(abi.encodePacked("Germany"))) {
                 refundAmount = (refundAmount * OracleContract.getExchangeRate() / 1000);

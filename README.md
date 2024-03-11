@@ -31,7 +31,7 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 - **Students & Researchers**
 
 ### Assumptions
-- Deployment on sepolia testnet (ethereum blockchain): Assumption of integrity of the blockchain data (in a real world adoption a private blockchain would be expedient)
+- Deployment on sepolia testnet (ethereum blockchain): Assumption of integrity of the blockchain data (in a real-world adoption a private blockchain would be expedient)
 - Only 1 VAT rate per country
 - Government collaboration
 - Adoption by businesses
@@ -41,7 +41,6 @@ The objective of this prototype is to prevent VAT fraud, enhance system efficien
 ### Open Issues
 - Exchange rate (CHF-EUR) oracle for precise currency swaps
 - VAT rate oracle for reliable VAT rates and to add multiple VAT rates per country depending on the industry
-- Integration of different VAT rates per country
 - getNFTData and getCompany are currently public so everybody can access the data (safety concerns)
 
 ## Installation to Compile, Deploy & Interact with the Contracts
