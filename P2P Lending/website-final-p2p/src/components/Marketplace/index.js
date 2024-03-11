@@ -1,26 +1,96 @@
 import React, { useState, useEffect } from 'react';
-import { H1, H3 } from './MarketplaceElements'; // Assuming H1 is correctly imported from your elements file
+import { useNavigate } from 'react-router-dom'; 
+import { H1, H3, Files, FileTitle } from './MarketplaceElements';
 import { TextField, Box, Button, Paper, Typography, Grid } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Web3 from 'web3';
 import SmartContractABI from './ABIs/SmartContractABI.json'
 import StableCoinABI from './ABIs/StablecoinABI.json'
 
-const p2pLendingContractAddress = '0x71cd553Dd38566433653d070199b34D456761746';
+const p2pLendingContractAddress = '0x8FcbAD612B34D8DEeEE3566236f1ACc22FCCB7Ef';
 const stableCoinAddress = '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97';
+  
 
 const Marketplace = () => {
   const [lendingRequests, setLendingRequests] = useState([]);
-
+  const [stableCoinContract, setStableCoinContract] = useState(null);
+  const [p2pLendingContract, setP2PLendingContract] = useState(null);
+  const [userAccount, setUserAccount] = useState(null);
   const addLendingRequest = (request) => {
     setLendingRequests([...lendingRequests, { ...request, period: `${request.period} days` }]); // Update to include "days"
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const initWeb3 = async () => {
+      if (window.ethereum) {
+        try {
+          // Request account access
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const web3 = new Web3(window.ethereum);
+          
+          // Fetch the list of accounts
+          const accounts = await web3.eth.getAccounts();
+          if (accounts.length > 0) {
+            setUserAccount(accounts[0]); // Sets the first account as the user account
+          } else {
+            console.log("No accounts found.");
+          }
+          
+          // Initialize contract instances
+          const tempStableCoinContract = new web3.eth.Contract(
+            StableCoinABI,
+            stableCoinAddress
+          );
+          
+          const tempP2PLendingContract = new web3.eth.Contract(
+            SmartContractABI,
+            p2pLendingContractAddress
+          );
+          
+          setStableCoinContract(tempStableCoinContract);
+          setP2PLendingContract(tempP2PLendingContract);
+        } catch (error) {
+          console.error("Error connecting to MetaMask", error);
+        }
+      } else {
+        console.log('Ethereum provider not found. Install MetaMask.');
+      }
+    };
+    
+    initWeb3().catch(console.error);
+  }, []);
+  
+  const approveCredit = async (borrowerAddress, amount) => {
+    if (!stableCoinContract || !userAccount) {
+      console.log("Contracts not initialized or user account not found.");
+      return;
+    }
+  
+    const amountInTokens = amount.toString();
+    const amountInWei = (amountInTokens * Math.pow(10, 6)).toString(); // For a token with 6 decimals
+    console.log(amountInWei);
+  
+    // Attempt the approval, but navigate regardless of the result
+    try {
+      console.log(`Attempting to approve ${amount} tokens for the P2P lending contract...`);
+      await stableCoinContract.methods.approve(p2pLendingContractAddress, amountInWei).send({ from: userAccount });
+      console.log("Approval successful.");
+    } catch (error) {
+      console.error("Approval error:", error);
+    }
+  
+    // Navigate after the attempt
+    navigate(`/Marketplace/grant-credit/${borrowerAddress}/${amount}`);
+  };
+  
 
   return (
     <>
       <H1>Lenders Marketplace</H1>
       <LendingForm onNewRequest={addLendingRequest} />
-      <LendingRequestsList requests={lendingRequests} />
+      <LendingRequestsList requests={lendingRequests} onApproveCredit={approveCredit}/>
     </>
   );
 };
@@ -29,32 +99,9 @@ const Marketplace = () => {
 const LendingForm = ({ onNewRequest }) => {
   const [amount, setAmount] = useState('');
   const [period, setPeriod] = useState('');
-  const [walletAddress, setWalletAddress] = useState('');
+  const [borrowerAddress, setWalletAddress] = useState('');
   const [description, setDescription] = useState('');
   const [files, setFiles] = useState([]);
-  const [p2pLendingContract, setP2PLendingContract] = useState(null);
-  const [stableCoinContract, setStableCoinContract] = useState(null);
-
-  useEffect(() => {
-    async function initWeb3() {
-      if (window.ethereum) {
-        try {
-          window.web3 = new Web3(window.ethereum);
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const web3 = window.web3;
-          const p2pLendingContract = new web3.eth.Contract(SmartContractABI, p2pLendingContractAddress);
-          const stableCoinContract = new web3.eth.Contract(StableCoinABI, stableCoinAddress);
-          setP2PLendingContract(p2pLendingInstance);
-          setStableCoinContract(stableCoinInstance);
-        } catch (error) {
-          console.error('Error initializing web3:', error);
-        }
-      } else {
-        console.log('Non-Ethereum browser detected. Consider trying MetaMask!');
-      }
-    }
-    initWeb3();
-  }, []);
 
   const handleFileChange = (e) => {
     setFiles([...e.target.files]);
@@ -62,7 +109,7 @@ const LendingForm = ({ onNewRequest }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onNewRequest({ amount, period, walletAddress, description, files });
+    onNewRequest({ amount, period, borrowerAddress, description, files });
     setAmount('');
     setPeriod('');
     setWalletAddress('');
@@ -91,6 +138,22 @@ const LendingForm = ({ onNewRequest }) => {
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
         required
+        sx={{
+          '& label.Mui-focused': {
+            color: 'grey', // Color of the label when the TextField is focused
+          },
+          '& .MuiInput-underline:after': {
+            borderBottomColor: '#7393B3', // Color of the underline when the TextField is focused
+          },
+          '& .MuiOutlinedInput-root': {
+            '&:hover fieldset': {
+              borderColor: '#7393B3', // Color of the border when hovered
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#7393B3', // Color of the border when the TextField is focused
+            },
+          },
+        }}
       />
       {/* Use TextField for period input */}
       <TextField
@@ -102,6 +165,22 @@ const LendingForm = ({ onNewRequest }) => {
         value={period}
         onChange={(e) => setPeriod(e.target.value)}
         required
+        sx={{
+          '& label.Mui-focused': {
+            color: 'grey', // Color of the label when the TextField is focused
+          },
+          '& .MuiInput-underline:after': {
+            borderBottomColor: '#7393B3', // Color of the underline when the TextField is focused
+          },
+          '& .MuiOutlinedInput-root': {
+            '&:hover fieldset': {
+              borderColor: '#7393B3', // Color of the border when hovered
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#7393B3', // Color of the border when the TextField is focused
+            },
+          },
+        }}
       />
       {/* New TextField for wallet address */}
       <TextField
@@ -110,9 +189,25 @@ const LendingForm = ({ onNewRequest }) => {
         label="Wallet Address"
         variant="outlined"
         type="text"
-        value={walletAddress}
+        value={borrowerAddress}
         onChange={(e) => setWalletAddress(e.target.value)}
         required
+        sx={{
+          '& label.Mui-focused': {
+            color: 'grey', // Color of the label when the TextField is focused
+          },
+          '& .MuiInput-underline:after': {
+            borderBottomColor: '#7393B3', // Color of the underline when the TextField is focused
+          },
+          '& .MuiOutlinedInput-root': {
+            '&:hover fieldset': {
+              borderColor: '#7393B3', // Color of the border when hovered
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#7393B3', // Color of the border when the TextField is focused
+            },
+          },
+        }}
       />
       {/* Use TextField for period input */}
       <TextField
@@ -126,13 +221,37 @@ const LendingForm = ({ onNewRequest }) => {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         required
+        sx={{
+          '& label.Mui-focused': {
+            color: 'grey', // Color of the label when the TextField is focused
+          },
+          '& .MuiInput-underline:after': {
+            borderBottomColor: '#7393B3', // Color of the underline when the TextField is focused
+          },
+          '& .MuiOutlinedInput-root': {
+            '&:hover fieldset': {
+              borderColor: '#7393B3', // Color of the border when hovered
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#7393B3', // Color of the border when the TextField is focused
+            },
+          },
+        }}
       />
       <Button
         component="label"
         role={undefined}
-        variant="outlined"
+        variant="contained"
         tabIndex={-1}
         startIcon={<CloudUploadIcon />}
+        sx={{
+          backgroundColor: '#7393B3', // Button background color
+          color: '#ffffff', // Text color
+          '&:hover': {
+            backgroundColor: '#405469', // Darker background color on hover
+            fontWeight: 'bold',
+          },
+        }}
       >
         Upload Files
         <input
@@ -144,65 +263,37 @@ const LendingForm = ({ onNewRequest }) => {
       </Button>
       {files.length > 0 && (
         <Box mt={2} sx={{ width: '50ch' }}> {/* Adjust width as needed */}
-          <Typography variant="subtitle1">Selected files:</Typography>
+          <FileTitle variant="subtitle1">Selected files:</FileTitle>
           <ul>
             {files.map((file, index) => (
               <li key={index}>
-                <Typography variant="body2">{file.name}</Typography>
+                <Files variant="body2">{file.name}</Files>
               </li>
             ))}
           </ul>
         </Box>
       )}
-      <Button type="submit" variant="contained">Add Request</Button>
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{
+          backgroundColor: '#7393B3', // Button background color
+          color: '#ffffff', // Text color
+          '&:hover': {
+            backgroundColor: '#405469', // Darker background color on hover
+            fontWeight: 'bold',
+          },
+        }}
+      >
+      Add Request
+      </Button>
     </Box>
   );
 };
 
-const approveAndGrantCredit = async (borrower, amount) => {
-  try {
-    const web3 = new Web3(window.ethereum);
-    const p2pLendingContract = new web3.eth.Contract(SmartContractABI, p2pLendingContractAddress);
-    const stableCoinContract = new web3.eth.Contract(StableCoinABI, stableCoinAddress);
-    // Ensure MetaMask or any Ethereum provider is connected
-    const accounts = await web3.eth.getAccounts();
-    if (accounts.length === 0) {
-      console.error("No accessible accounts. Ensure MetaMask is connected.");
-      return;
-    }
-
-    const lender = accounts[0]; // Assuming the lender is the current user
-
-    // Convert amount to the appropriate format based on the token's decimals
-    const decimals = await stableCoinContract.methods.decimals().call(); // Fetching decimals dynamically
-    const amountInWei = web3.utils.toBN(amount).mul(web3.utils.toBN(10).pow(web3.utils.toBN(decimals)));
-    
-    // Approve the P2P Lending Contract to spend the tokens on behalf of the lender
-    await stableCoinContract.methods.approve(p2pLendingContractAddress, amountInWei.toString()).send({ from: lender })
-      .on('transactionHash', hash => {
-        console.log(`Approval transaction hash: ${hash}`);
-      });
-    // After approval, grant credit using the P2P Lending Contract
-    await p2pLendingContract.methods.grantCredit(borrower, amountInWei.toString()).send({ from: lender })
-      .on('transactionHash', function(hash){
-        console.log(`Transaction hash: ${hash}`);
-      })
-      .on('receipt', function(receipt){
-        console.log('Credit granted successfully', receipt);
-      })
-      .on('error', function(error, receipt) {
-        console.error('Error granting credit:', error);
-        if (receipt) console.error('Transaction receipt:', receipt);
-      });
-
-  } catch (error) {
-    console.error('Error in approving and granting credit:', error);
-  }
-};
-
 // Component to display all lending requests
-const LendingRequestsList = ({ requests }) => {
-
+const LendingRequestsList = ({ requests, onApproveCredit }) => {
+  
   if (requests.length === 0) {
     return (
       <Box display="flex" justifyContent="center" mt={2}>
@@ -215,7 +306,7 @@ const LendingRequestsList = ({ requests }) => {
     <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
       <H3>Current Lending Requests</H3>
       {requests.map((request, index) => (
-        <Paper key={index} elevation={3} style={{ margin: '16px 0', padding: '16px', width: '80%' }}>
+        <Paper key={index} elevation={3} style={{ margin: '16px 0', padding: '16px', width: '95%', backgroundColor: '#F5F5F5' }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <Typography variant="body1"><strong>Amount:</strong> ${request.amount}</Typography>
@@ -229,11 +320,11 @@ const LendingRequestsList = ({ requests }) => {
             {request.files && request.files.length > 0 && (
               <Grid item xs={12}>
                 <Typography variant="body1"><strong>Files:</strong></Typography>
-                <ul>
+                <Files>
                   {request.files.map((file, fileIndex) => (
                     <li key={fileIndex}>{file.name}</li>
                   ))}
-                </ul>
+                </Files>
               </Grid>
             )}
             {/* Grant Credit Button */}
@@ -241,7 +332,15 @@ const LendingRequestsList = ({ requests }) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => approveAndGrantCredit(request.borrowerAddress, request.amount)}
+                onClick={() => onApproveCredit(request.borrowerAddress, request.amount)}
+                sx={{
+                  backgroundColor: '#7393B3', // Button background color
+                  color: '#ffffff', // Text color
+                  '&:hover': {
+                    backgroundColor: '#405469', // Darker background color on hover
+                    fontWeight: 'bold',
+                  },
+                }}
               >
                 Grant Credit
               </Button>

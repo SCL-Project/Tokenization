@@ -12,7 +12,7 @@ const Navbar = ({toggle}) => {
   return (
         <>
             <Nav>
-                <NavbarContainer> 
+                <NavbarContainer>
                     <NavLogo to='/' onClick={toggleHome}>P2P-Lending</NavLogo>
                 </NavbarContainer>
             </Nav>

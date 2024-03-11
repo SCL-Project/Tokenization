@@ -9,7 +9,6 @@ import SignUp2 from './components/SignUp2';
 import MarketPage from './pages/marketplace';
 
 
-
 function App() {
   return (
     <Router>
@@ -17,7 +16,7 @@ function App() {
         <Route path='/' element={<Home />} exact />
         <Route path='/login' element={<LogIn />} />
         <Route path='/signupP' element={<SignUp2 />} />
-        <Route path='/Marketplace' element={<MarketPage />} />
+        <Route path='/Marketplace/*' element={<MarketPage />} />
       </Routes>
     </Router>
   );

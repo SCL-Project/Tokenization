@@ -35,4 +35,28 @@ export const NavLogo = styled(LinkR)`
     margin-left: 24px;
     font-weight: bold;
     text-decoration: none;
+    z-index: 2;
     `
+
+export const VideoBg = styled.video`
+    width: 100%;
+    height: 15%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    background: #232a34;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0; // Ensure it's behind the content
+
+    &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent);
+    z-index: -1; // Ensure it's above the video but below the content
+    }
+`;
