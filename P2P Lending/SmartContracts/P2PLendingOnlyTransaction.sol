@@ -36,7 +36,7 @@ contract P2PLending {
     */
     event CreditGranted(address indexed lender, address indexed borrower, uint256 amount);
 
-        /** @dev Emitted when a new credit has been repaid by a borrower
+    /** @dev Emitted when a new credit has been repaid by a borrower
      *  @param lender The wallet address of the lender of the credit
      *  @param borrower The wallet address of the borrower
      *  @param amount The amount borrowed
