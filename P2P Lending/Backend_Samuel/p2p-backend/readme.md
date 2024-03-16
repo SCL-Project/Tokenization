@@ -5,3 +5,5 @@ Use ``node index.js`` in the p2p-backend folder to start the backend. It will al
 # change to Database login System
 copy the code in the index.js file with the code from the databaseIndex.js file.
 To connect the backend to the database you must have downloaded XAMPP and Apache and MySQL must be running and there must be a table called users in your p2p_lending Database.
+
+To run the application just start the backend as usual.
