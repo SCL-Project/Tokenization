@@ -11,7 +11,7 @@ install npm (npm install) and all the dependencies (npm i ... )  ->
 use ``npm start`` to run the frontend. It will run on port 3000 or 3001
 
 
-# change to Database login System
+# Change to Database login System
 Copy the code in the index.js file with the code from the databaseIndex.js file.
 To connect the backend to the database you must have downloaded XAMPP and Apache and MySQL must be running and there must be a table called users in your p2p_lending Database.
 
