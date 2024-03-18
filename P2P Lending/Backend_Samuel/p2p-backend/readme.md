@@ -17,5 +17,16 @@ To connect the backend to the database you must have downloaded XAMPP and Apache
 
 To run the application just start the backend as usual.
 
-# Implement the backend into the frontend
-Go to p2p-frontend-poc/src/auth and open the register.js and the login.js file. 
+# Implement the frontend into the backend
+Go to p2p-frontend-poc/src/auth and open the register.js file. 
+
+## Frontend: 
+In the register file you can add more fields in the return area, just copy a already existing "FormGroup" and change the name of the field. 
+Important is to add the data that is created by the new field to the Register function. 
+Therefore add the name of the field to the other variables on line 13. 
+
+## Backend:
+open the databaseIndex.js file. 
+on line 82, in the register route, add the new created value to the const. 
+on line 102 and 105 the Database Query has to be adjusted. (dont forget to make sure, that there is a column for the new entry in the Database)
+
