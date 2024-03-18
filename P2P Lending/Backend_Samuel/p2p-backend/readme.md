@@ -1,7 +1,14 @@
 # Starting the backend
 Open two terminals. 
-For one navigate into the p2p-backend directory  ->  install npm (npm install) and all the dependencies (npm i ... )  ->  use ``node index.js`` to start the backend. It will run on port 4000
-For the other navigate into the p2p-frontend-poc directory  ->  install npm (npm install) and all the dependencies (npm i ... )  ->  use ``npm start`` to run the frontend. It will run on port 3000 or 3001
+
+For one navigate into the p2p-backend directory  ->  
+install npm (npm install) and all the dependencies (npm i ... )  ->  
+use ``node index.js`` to start the backend. It will run on port 4000
+
+
+For the other navigate into the p2p-frontend-poc directory  ->  
+install npm (npm install) and all the dependencies (npm i ... )  ->  
+use ``npm start`` to run the frontend. It will run on port 3000 or 3001
 
 
 # change to Database login System
