@@ -16,3 +16,6 @@ Copy the code in the index.js file with the code from the databaseIndex.js file.
 To connect the backend to the database you must have downloaded XAMPP and Apache and MySQL must be running and there must be a table called users in your p2p_lending Database.
 
 To run the application just start the backend as usual.
+
+# Implement the backend into the frontend
+Go to p2p-frontend-poc/src/auth and open the register.js and the login.js file. 
