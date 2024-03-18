@@ -1,5 +1,7 @@
 # Starting the backend
-Use ``node index.js`` in the p2p-backend folder to start the backend. It will also use port 3000 but react handles this by asking after running ``npm start``. Usually the react app will end up on port 3001
+Open two terminals. 
+For one navigate into the p2p-backend directory  ->  install npm (npm install) and all the dependencies (npm i ... )  ->  use ``node index.js`` to start the backend. It will run on port 4000
+For the other navigate into the p2p-frontend-poc directory  ->  install npm (npm install) and all the dependencies (npm i ... )  ->  use ``npm start`` to run the frontend. It will run on port 3000 or 3001
 
 
 # change to Database login System
