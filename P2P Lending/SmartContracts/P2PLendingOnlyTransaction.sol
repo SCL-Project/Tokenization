@@ -46,7 +46,7 @@ contract P2PLending {
 //------------------------------------------------Structs----------------------------------------------------
 
     /**
-     * @dev Struct to store the details the lending
+     * @dev Struct to store the details of the lending
      * @param lender The wallet address of the lender giving the credit
      * @param amount The amount of the lending
      */
