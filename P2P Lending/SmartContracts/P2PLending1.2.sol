@@ -59,7 +59,8 @@ contract P2PLending {
 
     /**
      * @dev Mapping to store the current loans given
-     */    mapping(address => Loan) private loans;
+     */  
+    mapping(address => Loan) private loans;
 
 //-----------------------------------------------Functions---------------------------------------------------
 

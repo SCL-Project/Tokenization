@@ -11,7 +11,7 @@ const MarketPage = () => {
       <NavbarMarketplace/>
       <Routes>
       <Route path="/" element={<Marketplace />} exact />
-      <Route path="/grant-credit/:borrowerAddress/:amount" element={<TokenTransfer />} />
+      <Route path="/grant-credit/:borrowerAddress/:amount/:period" element={<TokenTransfer />} />
       </Routes>
       <Footer/>
     </>

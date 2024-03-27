@@ -190,6 +190,7 @@ contract P2PLending is ERC721, ERC721Burnable, Ownable {
         uint256 _InterestRate,
         uint256 _StablecoinAmount
         ) external onlyRegisteredUsers {
+        require(Registry[_Lender].isRegistered && Registry[_Borrower].isRegistered);
         require(IERC20(stablecoinAddress).transferFrom(_Lender, _Borrower, _StablecoinAmount), 
         "Stablecoin transfer failed");
         uint256 _PayBackAmount = _Amount * (1+_InterestRate);
@@ -240,4 +241,3 @@ contract P2PLending is ERC721, ERC721Burnable, Ownable {
         emit LoanRepaid(msg.sender, contractDetails.PayBackAmount);
     }
 }
-
