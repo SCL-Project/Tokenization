@@ -54,7 +54,7 @@ All state-changing operations are protected to ensure that only valid and intend
 Tests should cover all functionalities, including edge cases such as transfers of zero amounts, granting credit when a loan already exists, repayment from non-borrowers, and interactions with the transferFrom and allowance functions of the ERC20 token.
 
 ## Deployment and Interaction
-The contract should be deployed on the Ethereum mainnet or testnets like Sepolia. Interaction with the contract can be done via Ethereum wallets like MetaMask or programmatically using libraries like web3.js or ethers.js.
+The contract should be deployed on the Ethereum mainnet or testnets like Sepolia. Interaction with the contract can be done via Ethereum wallets like MetaMask or programmatically using libraries like web3.js or ethers.js.  
 *Before a loan can be granted, lenders must approve the contract to spend the loan amount on their behalf*
 
 ## Versioning
