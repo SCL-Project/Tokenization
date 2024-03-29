@@ -3,7 +3,7 @@
 /// @title P2PLending Contract
 /// @author Dario Ganz
 // Smart Contracts Lab, University of Zurich
-// Created: March 20, 2024
+// Created: March 25, 2024
 // ***************************************************************************************************************
 pragma solidity ^0.8.20;
 
@@ -58,7 +58,23 @@ contract P2PLending is Ownable {
         locked = true;
         _;
         locked = false;
-    }    
+    }
+
+    /**
+     * @dev Modifier to check whether a user is registered or not to ensure no malicious actors
+     */
+    modifier isRegistered() {
+        require(registeredAddresses[msg.sender], "User not registered");
+        _;
+    }
+
+    /**
+     * @dev Modifier to prevent actions on locked addresses
+     */
+    modifier addressNotLocked(address _user) {
+        require(!lockedAddresses[_user], "Address is locked");
+        _;
+    }
 
 //------------------------------------------------Events-----------------------------------------------------
 
@@ -91,14 +107,81 @@ contract P2PLending is Ownable {
         uint256 dueDate;
     }
 
-//------------------------------------------------Mapping----------------------------------------------------
+//------------------------------------------------Mappings---------------------------------------------------
 
     /**
      *  @dev Mapping to store the current loans given
      */  
     mapping(address => Loan) private loans;
 
+    /**
+     *  @dev Mapping to track registered users
+     */  
+    mapping(address => bool) public registeredAddresses;
+
+    /**
+     *  @dev Mapping to store locked addresses
+     */ 
+    mapping(address => bool) public lockedAddresses;
+
 //-----------------------------------------------Functions---------------------------------------------------
+
+    /**
+     * @dev Registers the caller (`msg.sender`) as a participant in the platform
+     *      This function allows users to register themselves to participate in 
+     *      lending activities
+     */
+    function register() public addressNotLocked(msg.sender) {
+        registeredAddresses[msg.sender] = true;
+    }
+
+    /**
+     * @dev Unregisters the caller (`msg.sender`) from the platform.
+     *      Requires that the caller is already registered
+     */
+    function unregister() public isRegistered {
+        registeredAddresses[msg.sender] = false;
+    }
+
+    /**
+     * @dev Allows the contract owner to manually register a user on the platform.
+     *      This administrative function enables the contract owner to add users to 
+     *      the list of registered addresses
+     * @param _user The address of the user to be registered
+     */
+    function adminRegister(address _user) public onlyOwner addressNotLocked(_user) {
+        registeredAddresses[_user] = true;
+    }
+
+    /**
+     * @dev Allows the contract owner to manually unregister a user from the platform.
+     *      This administrative function enables the contract owner to remove users from the list of registered addresses.
+     * @param _user The address of the user to be unregistered
+     */
+    function adminUnregister(address _user) public onlyOwner {
+        registeredAddresses[_user] = false;
+    }
+
+    /**
+     * @dev Allows the contract owner to lock an address. A locked address cannot have its
+     *      registration status changed
+     * @param _user The address to be locked
+     */
+    function lockAddress(address _user) public onlyOwner {
+        if (registeredAddresses[_user]) {
+        registeredAddresses[_user] = false;
+    }
+        lockedAddresses[_user] = true;
+    }
+
+    /**
+     * @dev Allows the contract owner to unlock an address, enabling its registration status
+     *      to be changed again
+     * @param _user The address to be unlocked
+     */
+    function unlockAddress(address _user) public onlyOwner {
+        lockedAddresses[_user] = false;
+    }
 
     /**
      *  @dev Sets the address of the stablecoin contract to choose with which Stablecoin
@@ -111,9 +194,9 @@ contract P2PLending is Ownable {
     }
 
     /**
-     * @dev Returns the loan details for the caller of this function.
-     * @return lender The address of the lender.
-     * @return amount The amount of the loan.
+     * @dev Returns the loan details for the caller of this function
+     * @return lender The address of the lender
+     * @return amount The amount of the loan
      */
     function getMyLoan() public view returns (address lender, uint256 amount, uint256 dueDate) {
         require(loans[msg.sender].amount > 0, "No outstanding loan");
@@ -127,7 +210,7 @@ contract P2PLending is Ownable {
      * @param _borrower The address of the borrower
      * @param _amount The amount of stablecoin to be loaned
      */
-    function grantCredit(address _lender, address _borrower, uint256 _amount, uint256 _dueDate) public noReentrant {
+    function grantCredit(address _lender, address _borrower, uint256 _amount, uint256 _dueDate) public noReentrant isRegistered addressNotLocked(msg.sender) {
         require(loans[_borrower].amount == 0, "Active loan exists"); // Prevent loan overwriting
         uint256 allowance = IERC20(stablecoinAddress).allowance(_lender, address(this));
         require(allowance >= _amount, "Allowance too low"); // Check allowance
