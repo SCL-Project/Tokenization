@@ -1,4 +1,4 @@
-# P2PLending Contract
+# P2PLending Contract 1.4
 
 ## Overview
 The P2PLending contract provides a decentralized solution for peer-to-peer (P2P) lending of ERC20 stablecoins. It allows users to grant and repay credits securely and automatically, without the need for intermediaries.
@@ -50,8 +50,15 @@ Emitted when a loan is successfully repaid
 The contract employs standard security practices, including the use of a registration, require statements for validation and the noReentrant modifier to prevent reentrancy attacks.
 All state-changing operations are protected to ensure that only valid and intended actions are executed.
 
-## Testing
-Tests should cover all functionalities, including edge cases such as transfers of zero amounts, granting credit when a loan already exists, repayment from non-borrowers, and interactions with the transferFrom and allowance functions of the ERC20 token.
+## Versions
+### P2PLending1.1
+Introduces blockchain-based contracts represented as ERC721 tokens, allowing for the unique representation of lender and borrower agreements as non-fungible tokens on the blockchain and automated transactions.
+### P2PLending1.2
+Removed ERC721 tokens to save on gas fees. Only transaction embedded in the smart contract due to the fact that the smart contract is recognised by Swiss law
+### P2PLending1.3
+Added a function to change the current stablecoin contract used for the transaction of the loan. Added the allowance function in the IERC20 Interface and the noReentrant modifier. Additionally added the due date of the loan to the functions.
+### P2PLending1.4
+Added functionality of register and lock addresses to prevent unauthorised use and potential fraud.
 
 ## Deployment and Interaction
 The contract should be deployed on the Ethereum mainnet or testnets like Sepolia. Interaction with the contract can be done via Ethereum wallets like MetaMask or programmatically using libraries like web3.js or ethers.js.
