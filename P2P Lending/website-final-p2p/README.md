@@ -18,20 +18,20 @@ To get started with the P2P Lending Platform, clone the repository to your local
 
 ```bash
 git clone https://github.com/SCL-Project/Tokenization.git
-
+```
 ## Navigating to the Project Directory
 
 ```bash
 cd Tokenization/P2P Lending/website-final-p2p
-
+```
 ## Install Dependencies
 ```bash
 npm install or yarn install
-
+```
 ## Starting the Development Server
 ```bash
 npm start or yarn start
-
+```
 ## Usage
 After starting the development server, you can interact with the P2P Lending Platform through your web browser. The application is connected to Ethereum smart contracts, allowing users to participate in peer-to-peer lending.
 
