@@ -210,7 +210,8 @@ contract P2PLending is Ownable {
      * @param _borrower The address of the borrower
      * @param _amount The amount of stablecoin to be loaned
      */
-    function grantCredit(address _lender, address _borrower, uint256 _amount, uint256 _dueDate) public noReentrant isRegistered addressNotLocked(msg.sender) {
+    function grantCredit(address _lender, address _borrower, uint256 _amount, uint256 _dueDate) public noReentrant addressNotLocked(msg.sender) {
+        require(registeredAddresses[_borrower], "Borrower not registered");
         require(loans[_borrower].amount == 0, "Active loan exists"); // Prevent loan overwriting
         uint256 allowance = IERC20(stablecoinAddress).allowance(_lender, address(this));
         require(allowance >= _amount, "Allowance too low"); // Check allowance
