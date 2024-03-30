@@ -28,10 +28,10 @@ const HeroSection = () => {
             <VideoBgWhite />
         </HeroBg>
         <HeroContent>
-          <HeroH1>Pocket-Sized Lending, Portfolio-Sized Dreams. 
+          <HeroH1>Pocket-Sized Lending for Students 
             </HeroH1>
-          <HeroP>Sign up for a new account today and transform lives with just a few clicks. 
-            Your small contribution could be the key to unlocking someone's big dream.</HeroP>
+          <HeroP>Sign up for a new account today and transform student lives with just a few clicks. 
+            Your small contribution are the key to unlocking someone's big dream.</HeroP>
           <HeroBtnWrapper>
             <Button to='signup' onMouseEnter={onHover} onMouseLeave={onHover}
             >Get started {hover ? <ArrowForward /> : <ArrowRight />}

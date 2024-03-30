@@ -10,15 +10,11 @@ export const Container = styled.div`
     top: 0;
     z-index: 0;
     overflow: hidden;
-    background: linear-gradient(
-        108deg, 
-        rgba(1, 147, 86, 1) 0%, 
-        rgba(10, 201, 122, 1) 100%
-        );
+    background: #101522;
 `;
 
 export const FormWrap = styled.div`
-    height: 100%;
+    height: 105%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -54,7 +50,7 @@ export const FormContent = styled.div`
 `;
 
 export const Form  = styled.form`
-    background: #010101;
+    background: #0f1421;
     max-width: 400px;
     height: auto;
     width: 100%;
@@ -63,7 +59,6 @@ export const Form  = styled.form`
     margin: 0 auto;
     padding: 80px 32px;
     border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.9);
 
     @media screen and (max-width: 400px) {
       padding: 32px 32px  
@@ -93,7 +88,7 @@ export const FormInput = styled.input`
 
 export const FormButton = styled(Link)`
     background: #01bf71;
-    padding: 16px 0;
+    padding: 15px 10px;
     border: none;
     border-radius: 4px;
     color: #fff;
@@ -110,5 +105,5 @@ export const Text = styled.span`
     text-align: center;
     margin-top: 24px;
     color: #fff;
-    font-size: 14px;
+    font-size: 15px;
 `;

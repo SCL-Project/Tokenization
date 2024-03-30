@@ -5,14 +5,16 @@ import SmartContractABI from './ABIs/SmartContractABI.json';
 import { Container, StyledButton, StyledTypography, BoldText, VideoBg  } from './TokentransferElements';
 import Video from '../../videos/video.mp4';
 
-const p2pLendingContractAddress = '0x71cd553Dd38566433653d070199b34D456761746';
+const p2pLendingContractAddress = '0xBF3FB1186E035f0172A5f412077Ced7b53752cD0';
 
 const TokenTransfer = () => {
-  const { borrowerAddress, amount } = useParams(); // Retrieve params from the URL
+  const { borrowerAddress, amount, period } = useParams();
+  console.log("Params:", { borrowerAddress, amount, period });
   const navigate = useNavigate();
   const [web3, setWeb3] = useState(null);
   const [userAccount, setUserAccount] = useState(null);
   const [p2pLendingContract, setP2PLendingContract] = useState(null);
+  const [dueDate, setDueDate] = useState('');
 
   useEffect(() => {
     const initWeb3 = async () => {
@@ -42,17 +44,41 @@ const TokenTransfer = () => {
     initWeb3();
   }, []);
 
-  const grantCredit = async () => {
+  useEffect(() => {
+    // Calculate the due date based on the period
+    const calculateDueDate = () => {
+      const today = new Date();
+      const numberOfDaysToAdd = parseInt(period, 10);
+      today.setDate(today.getDate() + numberOfDaysToAdd);
+
+      // Format the date in a human-readable form, e.g., "March 26, 2024"
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const dueDateString = today.toLocaleDateString('en-US', options);
+      setDueDate(dueDateString);
+    };
+
+    calculateDueDate();
+  }, [period]);
+
+  const transferTokens = async () => {
     if (!p2pLendingContract || !userAccount) {
       console.error("Contract not initialized or user account not found.");
       return;
     }
 
-    const amountInWei = Web3.utils.toWei(amount, 'ether');
+    const amountInTokens = amount.toString();
+    const amountInWei = (amountInTokens * Math.pow(10, 6)).toString(); // USDC has 6 decimals
+    console.log(`Amount in Wei: ${amountInWei}`);
 
+    const numberOfDaysToAdd = parseInt(period, 10);
+    if (isNaN(numberOfDaysToAdd)) {
+      console.error('Invalid period value:', period);
+      return;
+    }
+    const dueDateTimestamp = Math.floor(Date.now() / 1000) + (period * 24 * 60 * 60);
     try {
       console.log(`Granting credit of ${amount} tokens to ${borrowerAddress}...`);
-      await p2pLendingContract.methods.transferFrom(userAccount, borrowerAddress, amountInWei).send({ from: userAccount });
+      await p2pLendingContract.methods.grantCredit(userAccount, borrowerAddress, amountInWei, dueDateTimestamp).send({ from: userAccount });
       console.log("Credit granted successfully.");
       navigate('/');
     } catch (error) {
@@ -64,9 +90,9 @@ const TokenTransfer = () => {
     <Container>
       <VideoBg autoPlay loop muted src={Video} type='video/mp4' />
       <StyledTypography>
-        Are you sure you want to grant a Credit of <BoldText>{amount} USDC</BoldText> to <BoldText>{borrowerAddress}</BoldText>?
+        Are you sure you want to grant a Credit of <BoldText>{amount} USDC</BoldText> to <BoldText>{borrowerAddress}</BoldText> with the due date on <BoldText>{dueDate}</BoldText>?
       </StyledTypography>
-      <StyledButton onClick={grantCredit}>
+      <StyledButton onClick={transferTokens}>
         <BoldText>Grant Credit</BoldText>
       </StyledButton>
     </Container>

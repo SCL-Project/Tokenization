@@ -7,9 +7,9 @@ import Web3 from 'web3';
 import SmartContractABI from './ABIs/SmartContractABI.json'
 import StableCoinABI from './ABIs/StablecoinABI.json'
 
-const p2pLendingContractAddress = '0x8FcbAD612B34D8DEeEE3566236f1ACc22FCCB7Ef';
-const stableCoinAddress = '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97';
-  
+const p2pLendingContractAddress = '0xc4382b37B596b7bD2B2C20F34992aF9fbf3B8625';
+const stableCoinAddress = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238';
+
 
 const Marketplace = () => {
   const [lendingRequests, setLendingRequests] = useState([]);
@@ -17,7 +17,8 @@ const Marketplace = () => {
   const [p2pLendingContract, setP2PLendingContract] = useState(null);
   const [userAccount, setUserAccount] = useState(null);
   const addLendingRequest = (request) => {
-    setLendingRequests([...lendingRequests, { ...request, period: `${request.period} days` }]); // Update to include "days"
+    console.log("Received in addLendingRequest:", request);
+    setLendingRequests([...lendingRequests, { ...request, period: `${request.period}` }]);
   };
 
   const navigate = useNavigate();
@@ -62,27 +63,27 @@ const Marketplace = () => {
     initWeb3().catch(console.error);
   }, []);
   
-  const approveCredit = async (borrowerAddress, amount) => {
+  const approveCredit = async (borrowerAddress, amount, period) => {
     if (!stableCoinContract || !userAccount) {
-      console.log("Contracts not initialized or user account not found.");
+      console.log("In approveCredit - Period:", period); 
       return;
     }
-  
+    
     const amountInTokens = amount.toString();
     const amountInWei = (amountInTokens * Math.pow(10, 6)).toString(); // For a token with 6 decimals
     console.log(amountInWei);
-  
-    // Attempt the approval, but navigate regardless of the result
+
     try {
       console.log(`Attempting to approve ${amount} tokens for the P2P lending contract...`);
       await stableCoinContract.methods.approve(p2pLendingContractAddress, amountInWei).send({ from: userAccount });
+
       console.log("Approval successful.");
     } catch (error) {
       console.error("Approval error:", error);
     }
-  
-    // Navigate after the attempt
-    navigate(`/Marketplace/grant-credit/${borrowerAddress}/${amount}`);
+    // Navigate only after successful approval
+    console.log(`Navigating with borrowerAddress: ${borrowerAddress}, amount: ${amount}, period: ${period}`);
+    navigate(`/Marketplace/grant-credit/${borrowerAddress}/${amount}/${period}`);
   };
   
 
@@ -109,6 +110,7 @@ const LendingForm = ({ onNewRequest }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("Submitting request with period:", period);
     onNewRequest({ amount, period, borrowerAddress, description, files });
     setAmount('');
     setPeriod('');
@@ -312,7 +314,7 @@ const LendingRequestsList = ({ requests, onApproveCredit }) => {
               <Typography variant="body1"><strong>Amount:</strong> ${request.amount}</Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Typography variant="body1"><strong>Period:</strong> {request.period}</Typography>
+              <Typography variant="body1"><strong>Period:</strong> {request.period} days</Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="body1"><strong>Description:</strong> {request.description}</Typography>
@@ -332,7 +334,7 @@ const LendingRequestsList = ({ requests, onApproveCredit }) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => onApproveCredit(request.borrowerAddress, request.amount)}
+                onClick={() => onApproveCredit(request.borrowerAddress, request.amount, request.period)}
                 sx={{
                   backgroundColor: '#7393B3', // Button background color
                   color: '#ffffff', // Text color
