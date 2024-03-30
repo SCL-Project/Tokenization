@@ -1,46 +1,39 @@
-# Getting Started with Create React App
+# P2P Lending Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a part of the SCL Project, focusing on a peer-to-peer (P2P) lending platform. The website is built using React and interacts with smart contracts on the Ethereum blockchain.
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### `npm start`
+## Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Before you begin, ensure you have the following installed:
+- Git - [Download & Install Git](https://git-scm.com/downloads).
+- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/), and the npm package manager.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Cloning the Repository
 
-### `npm test`
+To get started with the P2P Lending Platform, clone the repository to your local machine by running the following command in your terminal:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+git clone https://github.com/SCL-Project/Tokenization.git
 
-### `npm run build`
+## Navigating to the Project Directory
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cd Tokenization/P2P Lending/website-final-p2p
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Install Dependencies
+```bash
+npm install or yarn install
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Starting the Development Server
+```bash
+npm start or yarn start
 
-### `npm run eject`
+## Usage
+After starting the development server, you can interact with the P2P Lending Platform through your web browser. The application is connected to Ethereum smart contracts, allowing users to participate in peer-to-peer lending.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## License
+This project is licensed under the MIT License.
