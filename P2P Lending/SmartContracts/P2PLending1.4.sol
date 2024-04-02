@@ -117,12 +117,12 @@ contract P2PLending is Ownable {
     /**
      *  @dev Mapping to track registered users
      */  
-    mapping(address => bool) public registeredAddresses;
+    mapping(address => bool) private  registeredAddresses;
 
     /**
      *  @dev Mapping to store locked addresses
      */ 
-    mapping(address => bool) public lockedAddresses;
+    mapping(address => bool) private  lockedAddresses;
 
 //-----------------------------------------------Functions---------------------------------------------------
 
