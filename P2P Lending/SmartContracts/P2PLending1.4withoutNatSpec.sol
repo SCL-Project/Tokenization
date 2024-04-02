@@ -62,8 +62,8 @@ contract P2PLending is Ownable {
 //------------------------------------------------Mappings---------------------------------------------------
  
     mapping(address => Loan) private loans;  
-    mapping(address => bool) public registeredAddresses;
-    mapping(address => bool) public lockedAddresses;
+    mapping(address => bool) private registeredAddresses;
+    mapping(address => bool) private lockedAddresses;
 
 //-----------------------------------------------Functions---------------------------------------------------
 
