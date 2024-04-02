@@ -5,7 +5,7 @@ import SmartContractABI from './ABIs/SmartContractABI.json';
 import { Container, StyledButton, StyledTypography, BoldText, VideoBg  } from './TokentransferElements';
 import Video from '../../videos/video.mp4';
 
-const p2pLendingContractAddress = '0xBF3FB1186E035f0172A5f412077Ced7b53752cD0';
+const p2pLendingContractAddress = '0x02f14672c41635213679107b6523dF5B098ba162';
 
 const TokenTransfer = () => {
   const { borrowerAddress, amount, period } = useParams();

@@ -7,7 +7,7 @@ import Web3 from 'web3';
 import SmartContractABI from './ABIs/SmartContractABI.json'
 import StableCoinABI from './ABIs/StablecoinABI.json'
 
-const p2pLendingContractAddress = '0xc4382b37B596b7bD2B2C20F34992aF9fbf3B8625';
+const p2pLendingContractAddress = '0x02f14672c41635213679107b6523dF5B098ba162';
 const stableCoinAddress = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238';
 
 
