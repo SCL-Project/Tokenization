@@ -1,0 +1,42 @@
+[
+  {
+    "email": "admin@admin.com",
+    "password": "$2b$10$ru76qzVkSVcbBF3XxyZjJOhG6CKjEYSpMJiOqQryDM95iDVobbjuG",
+    "firstname": "123",
+    "lastname": "123",
+    "address": "123",
+    "city": "123",
+    "plz": "123",
+    "ahv_number": "123"
+  },
+  {
+    "email": "anouk.test@icloud.com",
+    "password": "$2b$10$FHkm0V7hJ/UM.F2EXFvv0uXAqc/U23zm4Aso0UuEZMjE6siVHglSW",
+    "firstname": "Anouk",
+    "lastname": "Test",
+    "address": "Test 22",
+    "city": "7000",
+    "plz": "Chur",
+    "ahv_number": "123456789"
+  },
+  {
+    "email": "lilli.test@icloud.com",
+    "password": "$2b$10$8rP0Apv0VV3Y6OJs0uuaceCT1It9kxWKPq6eTkcWkoD1lkWp3o9vW",
+    "firstname": "Lilli",
+    "lastname": "Test",
+    "address": "Churerstrasse ",
+    "city": "Chur",
+    "plz": "7000",
+    "ahv_number": "363872929"
+  },
+  {
+    "email": "annameier@gmail.ch",
+    "password": "$2b$10$ZU2rHphGkkEvarjckf6eG.8JZtV8DAf.o.QJPF2BoTRTc.PvSAKJa",
+    "firstname": "Anna ",
+    "lastname": "Meier",
+    "address": "Annameier",
+    "city": "chur",
+    "plz": "3000",
+    "ahv_number": "30202020"
+  }
+]
